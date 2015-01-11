@@ -1,6 +1,7 @@
 http://183.106.113.109/30stair/pTp/pTp.php?pname=pTp
 
 프로그램 명: pTp(open)
+=====================
 
 제한시간: 1 초
 
