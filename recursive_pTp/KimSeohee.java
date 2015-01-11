@@ -21,7 +21,7 @@ public class pTp {
 			return ""+1+a;
 		}
 		
-		return ""+getSol(a-1)+1+a;
+		return ""+getSol(a-1)+1+a+getSol(a-1);
 	}
 
 }
