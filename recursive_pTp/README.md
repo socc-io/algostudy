@@ -1,8 +1,9 @@
 http://183.106.113.109/30stair/pTp/pTp.php?pname=pTp
 
-
 프로그램 명: pTp(open)
+
 제한시간: 1 초
+
 봉우리가 여러개인 산 모양을 출력한다. 산 모양은 그림과 같고 좌우 대칭이다.
 
 <img src = "http://183.106.113.109/30stair/pTp/img/pTp.gif">
