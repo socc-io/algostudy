@@ -1,4 +1,7 @@
 
+http://183.106.113.109/30stair/ccc_chances/ccc_chances.php?pname=ccc_chances
+
+
 프로그램 명: ccc_chances
 
 제한시간: 1 초
