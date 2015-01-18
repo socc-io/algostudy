@@ -31,10 +31,15 @@ http://183.106.113.109/30stair/ccc_chances/ccc_chances.php?pname=ccc_chances
 입력
 
 3
+
 3
+
 1 3 7 5
+
 3 4 0 8
+
 2 4 2 2
+
 
 출력
 
@@ -43,10 +48,15 @@ http://183.106.113.109/30stair/ccc_chances/ccc_chances.php?pname=ccc_chances
 입력
 
 3
+
 4
+
 1 3 5 7
+
 3 4 8 0
+
 2 4 2 2
+
 1 2 5 5
 
 출력
