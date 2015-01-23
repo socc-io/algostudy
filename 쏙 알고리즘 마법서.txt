@@ -1,0 +1,16 @@
+문제집
+
+1.재귀 (1차-1/11)
+
+  pTp	: http://183.106.113.109/30stair/pTp/pTp.php?pname=pTp
+  
+  hanoi : http://183.106.113.109/30stair/hanoi/hanoi.php?pname=hanoi
+
+2.트리 (2차-1/18)
+  obilazak : http://183.106.113.109/30stair/coci_obilazak/coci_obilazak.php?pname=coci_obilazak
+
+보강문제(1/23)
+  비밀 메시지 : http://183.106.113.109/30stair/secret_message/secret_message.php?pname=secret_message  
+
+  배설물 관찰 : http://183.106.113.109/30stair/poop/poop.php?pname=poop
+  
