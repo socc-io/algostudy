@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int *sort(int *arr1, int *arr2, int size1, int size2){
+int *merge(int *arr1, int *arr2, int size1, int size2){
 	int i = 0, j = 0, k=0, t,
 		*arrResult;
 	int size = size1 + size2;
@@ -48,7 +48,7 @@ int* merge_sort(int arr[10], int start, int end){
 		temp_1 = merge_sort(arr, start, (start + end) / 2);
 		temp_2 = merge_sort(arr, (start + end) / 2 + 1, end);
 
-		tempResult = sort(temp_1, temp_2, size1, size2);
+		tempResult = merge(temp_1, temp_2, size1, size2);
 	}
 	return tempResult;
 }
