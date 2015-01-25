@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int *sort(int *arr1, int *arr2, int size1, int size2){
 	int i = 0, j = 0, k=0, t,
@@ -49,14 +48,8 @@ int* merge_sort(int arr[10], int start, int end){
 		temp_1 = merge_sort(arr, start, (start + end) / 2);
 		temp_2 = merge_sort(arr, (start + end) / 2 + 1, end);
 
-		//printf("arr_size : %d\n", arr_size);
 		tempResult = sort(temp_1, temp_2, size1, size2);
 	}
-	//for (int i = 0; i < size1 + size2; i++){
-	//	printf("%d ", tempResult[i]);
-	//}
-	//puts("");
-	//p++;
 	return tempResult;
 }
 
