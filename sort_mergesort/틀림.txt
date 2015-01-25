@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 8
+int a[SIZE] = {5,7,3,6,8,2,4,6};
+int r=0;
+
+int *merge(int *m,int *n,int size){//나눠진걸 정렬하는 애
+	int *input1 = (int *) malloc (sizeof(int)*size);
+	int *input2 = (int *) malloc (sizeof(int)*size);
+	input1 = m;
+	input2 = n;
+	int i=0,j=0;
+	int result[SIZE+1] = {0, };
+	while(i!=size && j!=size){
+		if(input1[i] >= input2[j] || i==size){
+			result[r] = input2[j];
+			j++;
+			r++;
+		}
+		else if(j==size || input1[i] <= input2[j]){
+			result[r] = input1[i];
+			i++;
+			r++;
+		}
+	}
+	/*
+	printf("m 배열");
+	for(int i = 0;i<size;i++){
+		printf("%d \n",input1[i]);
+	}
+	printf("\n");
+	printf("n 배열");
+	for(int i = 0;i<size;i++){
+		printf("%d \n",input2[i]);
+	}
+	printf("\n");
+	printf("result 배열");
+	for(int i = 0;i<size*2;i++){
+		printf("%d \n",result[i]);
+	}
+	printf("\n");
+	*/
+	return result;
+}
+int *ms(int *A,int s,int e){	//나누는애
+	int newarr[2] = {0, };
+	int *Q = (int*)malloc(sizeof(int)*(e-s+1));
+	int *W = (int*)malloc(sizeof(int)*(e-s+1));
+	//printf("flag1\n");
+	if(s == e){
+		newarr[0] = A[s];
+		return newarr;
+	}
+	//printf("flag2\n");
+	Q = ms(A,0,(s+e)/2);
+	W = ms(A,((s+e)/2)+1,e);
+	//printf("flag3\n");
+
+	printf("Q 배열");
+	printf("\n");
+	for(int i = 0;i<e-s+1;i++){
+		printf("%d \n",Q[i]);
+	}
+	printf("\n");
+	printf("W 배열");
+	printf("\n");
+	for(int i = 0;i<e-s+1;i++){
+		printf("%d \n",W[i]);
+	}
+	printf("\n");
+	return merge(Q,W,e-s+1);
+	//printf("flag4\n");
+}
+int main(){
+	int *input;
+	input[SIZE];
+	//printf("1");
+	input = ms(a,0,SIZE-1);
+	printf("2");
+
+	for(int j = 0; j<SIZE; j++)
+		printf("%d ",input[j]);
+	return 0;
+}
