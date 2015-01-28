@@ -18,3 +18,5 @@
 3.Á¤·Ä
   
   jolly_sort : http://183.106.113.109/30stair/jolly_sort/jolly_sort.php?pname=jolly_sort
+   
+  sort_by_swaping : http://183.106.113.109/30stair/sort_by_swaping/sort_by_swaping.php?pname=sort_by_swaping
