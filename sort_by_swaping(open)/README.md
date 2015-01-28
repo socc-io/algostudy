@@ -1,4 +1,5 @@
-﻿프로그램 명: sort_by_swaping(open)
+﻿http://183.106.113.109/30stair/sort_by_swaping/sort_by_swaping.php?pname=sort_by_swaping
+프로그램 명: sort_by_swaping(open)
 제한시간: 1 초
 1 에서 n 까지의 수열이 주어질 때 , 두 수를 교환하여 크기 순으로 정렬하고자 하는 경우 최소 몇 번의 교환으로 가능한지를 알아내고자 한다.
 
