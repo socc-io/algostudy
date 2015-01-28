@@ -14,3 +14,7 @@
 
   배설물 관찰 : http://183.106.113.109/30stair/poop/poop.php?pname=poop
   
+
+3.정렬
+  
+  jolly_sort : http://183.106.113.109/30stair/jolly_sort/jolly_sort.php?pname=jolly_sort
