@@ -54,5 +54,5 @@
 
   줄세우기 : https://www.acmicpc.net/problem/7570
  
-  http://183.106.113.109/pool/koi_align/koi_align.php?pname=koi_align 	
+  줄세우기 : http://183.106.113.109/pool/koi_align/koi_align.php?pname=koi_align 	
  			
