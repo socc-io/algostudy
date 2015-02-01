@@ -1,4 +1,4 @@
-algostudy
+﻿algostudy
 ======
 
 이 Github의 Repository는, SOCC 알고리즘 스터디의 코드 공유 저장소로써, 각 문제별로 풀이법을 공유하고 있습니다.
@@ -53,4 +53,6 @@ algostudy
   sort_by_swaping : http://183.106.113.109/30stair/sort_by_swaping/sort_by_swaping.php?pname=sort_by_swaping
 
   줄세우기 : https://www.acmicpc.net/problem/7570
-  
+ 		
+	     http://183.106.113.109/pool/koi_align/koi_align.php?pname=koi_align 	
+ 			
