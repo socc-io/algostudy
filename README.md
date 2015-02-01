@@ -26,3 +26,31 @@ algostudy
 2. 개인별 알고리즘 실력 향상 그래프를 그려보는것도 재미있겠다 
 
 (실력향상의 기준은 평균적으로 얼마나 짧은 코드를 짜는가 도 하나의 기준이 될 수 있겠다)
+
+
+스터디 문제집
+-----------------------------------
+
+1.재귀 (1차-1/11)
+
+  pTp	: http://183.106.113.109/30stair/pTp/pTp.php?pname=pTp
+  
+  hanoi : http://183.106.113.109/30stair/hanoi/hanoi.php?pname=hanoi
+
+2.트리 (2차-1/18)
+  obilazak : http://183.106.113.109/30stair/coci_obilazak/coci_obilazak.php?pname=coci_obilazak
+
+보강문제(1/23)
+  비밀 메시지 : http://183.106.113.109/30stair/secret_message/secret_message.php?pname=secret_message  
+
+  배설물 관찰 : http://183.106.113.109/30stair/poop/poop.php?pname=poop
+  
+
+3.정렬
+  
+  jolly_sort : http://183.106.113.109/30stair/jolly_sort/jolly_sort.php?pname=jolly_sort
+   
+  sort_by_swaping : http://183.106.113.109/30stair/sort_by_swaping/sort_by_swaping.php?pname=sort_by_swaping
+
+  줄세우기 : https://www.acmicpc.net/problem/7570
+  
