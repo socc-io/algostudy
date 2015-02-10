@@ -11,7 +11,7 @@ bool ustrcmp(char* src, char* dst){
 	return true;
 }
 
-//가장 뒷부분에서 패턴이 존재하는지 확인한다
+//가장 뒷부분에서 (1~n) 길이별 패턴이 존재하는지 확인한다
 bool checkPattern(char arr[100], int count){
 	bool isPatternExist = false;
 	for (int i = 1; i * 2 <= count; i++){
