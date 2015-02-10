@@ -75,8 +75,11 @@ public:
 //푼 방법 : 백트래킹
 int solution(istream& in, ostream& out){
 	in >> len;
+	
+	//자료구조 선언 (스택으로 선언함)
 	stack<seq*> st = stack<seq*>( );
 
+	//초기값 자료구조에 넣어주기
 	for (int i = 2; i >= 0; i--){
 		seq* first = new seq((char)('1' + i));
 		if (first != NULL) st.push(first);
@@ -85,10 +88,13 @@ int solution(istream& in, ostream& out){
  	while (true){
 		if (st.isEmpty( )) break;
 		seq* now = st.pop( );
+		//현재 시퀀스가 결과에 적합한지 확인
 		if (now->isGoal( )){
 			out << now->arr << endl;
 			break;
 		}else{
+			//후보군을 생성한후, 자료구조에 넣음
+			//가장 최소값을 구해야 하므로, 321 순서로 추가시퀀스를 생성하여 넣는다.
 			for (int i = 2; i >= 0; i--){
 				seq* candy = now->getCandidate((char)('1'+i));
 				if (candy != NULL) {
