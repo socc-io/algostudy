@@ -44,12 +44,8 @@ public class Becxer {
 				
 				//대각선 못 놓게 표시한다
 				for(int j = 0 ; j+rowForNextQueen <size ; j++){
-					if(col-j >= 0){
-						next.map[j+rowForNextQueen][col-j] = -1;
-					}
-					if(col+j < size){
-						next.map[j+rowForNextQueen][col+j] = -1;
-					}
+					if(col-j >= 0) next.map[j+rowForNextQueen][col-j] = -1;
+					if(col+j < size) next.map[j+rowForNextQueen][col+j] = -1;
 				}
 				
 				//새로운 위치에 퀸을 놓는다, 퀸은 9!
@@ -67,8 +63,7 @@ public class Becxer {
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					//퀸이 있는 곳만 출력한다
-					if (map[i][j] == 9)
-						System.out.print(""+(j+1) + " ");
+					if (map[i][j] == 9)System.out.print(""+(j+1) + " ");
 				}
 			}
 			System.out.println();
@@ -106,13 +101,11 @@ public class Becxer {
 		while (!st.isEmpty()) {
 			Chess now = st.pop();
 			if (now.isFullQueen()) {
-				if (count++ < 3)
-					now.print_queen();
+				if (count++ < 3) now.print_queen();
 			} else {
 				for (int i = size - 1; i >= 0; i--) {
 					Chess next = now.genCandidate(i);
-					if (next != null)
-						st.push(next);
+					if (next != null) st.push(next);
 				}
 			}
 		}
