@@ -45,3 +45,6 @@ Maximum rope length is 8.
 Hint
 
 Huge input, scanf is recommended. If you use recursion, maybe stack overflow. and now C++/c 's stack size is larger than G++/gcc
+출처: Central Europe 1999
+[질/답] [제출 현황] [푼 후(0)]
+[ 채 점 ] [홈으로]  [뒤 로]
