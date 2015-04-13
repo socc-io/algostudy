@@ -1,29 +1,32 @@
 #include <stdio.h>
-unsigned int tower[500001];
+	int tw[500001]={0, };
+	int stack[500001]={0, };
+	int addr[500001]={0, };
 int main(){
 	int num;
-	int yes = 0;
-	int end = 0;
+	int top=-1;
+	int i;
 	scanf("%d",&num);
-	scanf("%d",&tower[0]);
+	for(i=0;i<num;i++){
+		scanf("%d",&tw[i]);
+	}
 	printf("0");
-	for(int i=1;i<num;i++){
-		scanf("%d",&tower[i]);
-		if(tower[i] > tower[end]){
-			end = i;
+	stack[++top] = tw[0];
+	addr[top] = 0;
+	for(i=1;i<num;i++){
+		while(top > -1 && tw[i] >= stack[top]){
+			top--;
+		}
+		if(top == -1){
 			printf(" 0");
+			stack[++top] = tw[i];
+			addr[top] = i;
 		}
 		else{
-			for(int j=i;j>=end;j--){
-				if(tower[i] < tower[j]){
-					printf(" %d",j+1);
-					break;	
-				}
-			}
+			printf(" %d",addr[top]+1);
+			stack[++top] = tw[i];
+			addr[top] = i;
 		}
-			
 	}
-	
-	
 	return 0;
 }
