@@ -1,4 +1,4 @@
-http://183.106.113.109/30stairquick_changequick_change.phppname=quick_change
+http://183.106.113.109/30stair/quick_change/quick_change.php?pname=quick_change
 
 프로그램 명: quick_change 
 
