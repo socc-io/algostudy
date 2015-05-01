@@ -1,0 +1,43 @@
+#include <stdio.h>
+int arr[66][66] = {0, };
+int N;
+char temp;
+void quad(int a, int b, int ll){
+	int error = 0;
+	for(int i=a;i<=a+ll-1;i++){
+		for(int j=b;j<=b+ll-1;j++){
+			//혹시 다른게 나오면
+			if(arr[i][j] != arr[a][b]){
+				error = 1;
+				break;
+			}
+		}
+		if(error == 1)
+			break;
+	}
+	if(error == 0){
+		//종료조건
+		printf("%d",arr[a][b]);
+		return ;
+	}
+	else if(error == 1){
+		printf("(");
+		//다 해보는 조건
+		quad(a,b,ll/2);
+		quad(a,b+ll/2,ll/2);
+		quad(a+ll/2,b,ll/2);
+		quad(a+ll/2,b+ll/2,ll/2);
+		printf(")");
+	}
+}
+int main(){
+	scanf("%d",&N);
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=N;j++){
+			scanf(" %c",&temp);
+			arr[i][j] = temp - '0';
+		}
+	}
+	quad(1,1,N);
+	return 0;
+}
