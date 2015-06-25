@@ -48,7 +48,7 @@ int main(int argc, char* argv[]){
 
 if len(sys.argv) <= 1:
 	print ''
-	print 'usage : genAlgoSource.py "problem_title" TYPE (default : ARGV)'
+	print 'usage : genCpp.py "problem_title" TYPE (default : ARGV)'
 	print ''
 	print 'TYPE : ARGV -> input from file, output to stdout (default)'
 	print 'TYPE : STDIN -> input from stdin, output to stdout'

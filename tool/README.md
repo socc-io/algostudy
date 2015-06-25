@@ -4,7 +4,7 @@
 
 현재 지원하는 언어는 Cpp 뿐입니다. 종종 추가하겠습니다.
 
-우선 문제를 풀려는 디렉토리에 algoWatch.sh , genAlgoCPP.py, pydemon.py 를 복사합니다.
+우선 문제를 풀려는 디렉토리에 algoWatch.sh , genCpp.py, pydemon.py 를 복사합니다.
 
 ----------------
 
@@ -21,7 +21,7 @@ $./algoWatch.sh SAMPLE cpp
 -----------------
 
 #####2. 소스 자동생성만 하고 싶다면, 아래와 같은 명령어를 입력하세요 (현재 CPP만)
-$./genAlgoCPP.py SAMPLE
+$./genCpp.py SAMPLE
 
     SAMPLE.cpp SAMPLE.input generated
 

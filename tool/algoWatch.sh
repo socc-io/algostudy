@@ -17,7 +17,7 @@ title=$1
 plang=$2
 cmd=""
 case "$plang" in
-cpp|CPP|Cpp) python genAlgoCPP.py $title
+cpp|CPP|Cpp) python genCpp.py $title
 			 cmd="python ./pydemon.py 'g++ $title.cpp -o $title.o;./$title.o $title.input'"
 	;;
 esac
