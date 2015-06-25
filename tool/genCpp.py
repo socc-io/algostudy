@@ -6,53 +6,42 @@
 
 import sys
 template = '''
-#include <fstream>
 #include <iostream>
-#define VERSION "ARGV" //FILE, STDIN, ARGV
+#include <cstdio>
+#include <vector>
+#include <string>
+#include <stack>
+#include <queue>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <cstdlib>    // for atoi
+#include <sstream>    // for stringstream
+#include <cmath>    // for sqrt
+#include <cstring>    // for memset
 using namespace std;
 
-char* INPUT_TEXT =  "#title.input";
-char* OUTPUT_TEXT = "#title.output";
+#define INF 2139999999
 
-int solution(istream& in, ostream& out){
-	char test[100];
-	in >> test;
-	out << test;
+int main(void) {
+    int tc;
+	char str[100]; 
+    cin >> tc; 
+    while(tc--) {
+		cin >> str;
+		cout << str << endl;
 
+
+
+    }   
     return 0;
 }
-
-int main(int argc, char* argv[]){
-    istream* in = &cin; ostream* out = &cout;
-    ifstream ifs; ofstream ofs;
-
-    if (VERSION == "ARGV"){
-        if(argc != 2) {
-            cout << "#title.out #title.input" << endl;
-            return 0;
-        }
-        INPUT_TEXT = argv[1];
-        ifs.open(INPUT_TEXT);
-        in = &ifs;
-    }
-
-    if (VERSION == "FILE"){
-        ifs.open(INPUT_TEXT);
-        ofs.open(OUTPUT_TEXT);
-        in = &ifs; out = &ofs;
-    }
-    return solution(*in,*out);
-}
 '''
-
 
 if len(sys.argv) <= 1:
 	print ''
 	print 'usage : genCpp.py "problem_title" TYPE (default : ARGV)'
 	print ''
-	print 'TYPE : ARGV -> input from file, output to stdout (default)'
-	print 'TYPE : STDIN -> input from stdin, output to stdout'
-	print 'TYPE : FILE -> input from file, output to file'
 	print ''
 	exit()
 
@@ -64,6 +53,6 @@ f = open(title+".cpp","w")
 f.write(template)
 f.close()
 f = open(title+".input","w")
-f.write("hello-algostudy!")
+f.write("3\nhello-algostudy!\nhello-socc!\nhello-world!")
 f.close()
 print title + '.cpp ' + title + '.input generated'

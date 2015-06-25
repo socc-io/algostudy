@@ -1,10 +1,10 @@
 ###알고스터디용  "소스 자동생성 & 소스 자동빌드 & 자동 인풋 입력 " 도구
 
-현재 지원하는 OS는 Mac, Linux 입니다. (Window는 .. 아몰랑!)
+현재 지원하는 OS는 Mac, Linux, Window(CPP)
 
 현재 지원하는 언어는 Cpp 뿐입니다. 종종 추가하겠습니다.
 
-우선 문제를 풀려는 디렉토리에 algoWatch.sh , genCpp.py, pydemon.py 를 복사합니다.
+우선 문제를 풀려는 디렉토리에 algoWatch.sh, genWinCpp.py, genCpp.py, pydemon.py 를 복사합니다.
 
 ----------------
 
@@ -17,6 +17,10 @@ $./algoWatch.sh SAMPLE cpp
     [stdout]----------------------
     hello-algostudy!
     pydemon watching your directory...
+
+#####윈도우 cpp는 아래처럼 생성해주세요
+
+$./algoWatch.sh SAMPLE wincpp
 
 -----------------
 
