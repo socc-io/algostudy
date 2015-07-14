@@ -1,4 +1,4 @@
-http://183.106.113.109/30stair/scales/scales.php?pname=scales
+http://59.23.113.171/30stair/scales/scales.php?pname=scales
 
 보석들을 저울 양쪽에 달아 무게가 동일하게 하려고 한다. 
 
