@@ -31,7 +31,7 @@ void solve()
 		}
 		if(fail)
 		{
-			printf("%d",distance);
+			printf("%d",distance-1);
 			break;
 		}
 		++distance;
