@@ -17,8 +17,8 @@ void solve()
 		int focus = 0;
 		for(int i=1; i<cow_num; ++i)
 		{
-			int next_focus = focus;
-			while(vStall[next_focus] - vStall[focus] >= distance)
+			int next_focus = focus+1;
+			while(vStall[next_focus] - vStall[focus] < distance)
 			{
 				++next_focus;
 				if(next_focus == stall_num)
@@ -27,6 +27,7 @@ void solve()
 					break;
 				}
 			}
+			focus = next_focus;
 			if(fail) break;
 		}
 		if(fail)
