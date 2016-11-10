@@ -1,3 +1,4 @@
 .pydemon.*
 a.out
 input.txt
+*.exe
