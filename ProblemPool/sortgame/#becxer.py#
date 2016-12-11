@@ -1,0 +1,14 @@
+n = int(raw_input())
+arr = map(int, str(raw_input()).split())
+k = int(raw_input())
+
+stack = []
+stack_p = []
+for i in range(k):
+    kab = map(int, str(raw_input()).split())
+    
+
+res = ''
+for i in range(n):
+    res += str(arr[i]) + ' '
+print res
