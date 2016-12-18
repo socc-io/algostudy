@@ -1,44 +1,17 @@
-#include <iostream>
-#include <stdio.h>
-#include <string>
+#include <cstdio>
 
-using namespace std;
+#define MOD 1000007
 
-#define MODULAR_BASE 1000007
+int map[201][201];
 
-int pow(int a, int b) {
-	int res = 1;
-	while(b > 0) {
-		if((b&1) == 1) {
-			res *= a;
-			res %= MODULAR_BASE;
-		}
-		res *= res;
-		res %= MODULAR_BASE;
-		b >>= 1;
+int main(void)
+{
+	int w, h, x, y;
+	scanf("%d%d%d%d", &w,&h,&x,&y);
+	for(int i=0;i<w;++i) map[i][0] = 1;
+	for(int i=1;i<h;++i) map[0][i] = 1;
+	for(int i=1;i<w;++i) for(int j=1;j<h;++j) {
+		map[i][j] = (map[i-1][j] + map[i][j-1]) % MOD;
 	}
-	return res;
-}
-
-int facto(int n) {
-   int res = 1;
-   for(int i=2;i<=n;++i) {
-   	res = (res * i) % MODULAR_BASE;
-   }
-   return res;
-}
-
-int f(int n, int m) {
-	int low = ((facto(n)%MODULAR_BASE) * (facto(m)%MODULAR_BASE)) % MODULAR_BASE;
-	int low_ = pow(low, MODULAR_BASE-2);
-   return ((facto(n + m)%MODULAR_BASE)*low_)%MODULAR_BASE;
-}
-
-int main() {
-   int w, h;
-   int x, y;
-   cin >> w >> h >> x >> y;
-   int result = ((f(w - x, h - y)%MODULAR_BASE)*(f(x - 1, y - 1)% MODULAR_BASE)) % MODULAR_BASE;
-   cout << result;
-   return 0;
+	printf("%d", ((unsigned long long)map[x-1][y-1] * map[w-x][h-y])%MOD);
 }

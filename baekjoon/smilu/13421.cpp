@@ -1,64 +1,75 @@
-#include <iostream>
-#include <vector>
+#include <cstdio>
 #include <algorithm>
 
-using namespace std;
+#define INF 0x3FFFFFFF
 
-#define INF 0x7FFFFFFF
-
-int search_case[24][4] = {
-	{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 2, 1, 3}, {0, 2, 3, 1}, {0, 3, 1, 2}, {0, 3, 2, 1}, //0
-	{1, 0, 2, 3}, {1, 0, 3, 2}, {1, 2, 0, 3}, {1, 2, 3, 0}, {1, 3, 0, 2}, {1, 3, 2, 0}, //1
-	{2, 0, 1, 3}, {2, 0, 3, 1}, {2, 1, 0, 3}, {2, 1, 3, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, // 2
-	{3, 0, 1, 2}, {3, 0, 2, 1}, {3, 1, 0, 2}, {3, 1, 2, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}  // 3
+struct point
+{
+	int x;
+	int y;
 };
 
-int m_distance(int x1, int y1, int x2, int y2) {
-	return abs(x1 - x2) + abs(y1 - y2);
+long long abs(long long val) {
+	return (val < 0 ? -val : val);
 }
 
-void my_insert(int val, vector<int> &vec)
-{
-	for(auto it = vec.begin(); it != vec.end(); ++it) {
-		if((*it) == val) return;
-	}
-	vec.push_back(val);
-}
+int rotation[24][4] = {
+	{0,1,2,3},
+	{0,1,3,2},
+	{0,2,1,3},
+	{0,2,3,1},
+	{0,3,1,2},
+	{0,3,2,1},
+	{1,0,2,3},
+	{1,0,3,2},
+	{1,2,0,3},
+	{1,2,3,0},
+	{1,3,0,2},
+	{1,3,2,0},
+	{2,0,1,3},
+	{2,0,3,1},
+	{2,1,0,3},
+	{2,1,3,0},
+	{2,3,0,1},
+	{2,3,1,0},
+	{3,0,1,2},
+	{3,0,2,1},
+	{3,1,0,2},
+	{3,1,2,0},
+	{3,2,0,1},
+	{3,2,1,0}
+};
 
 int main(int argc, char** argv)
 {
-	int spot[4][2];
-	int maxd = -1;
-	int mind = INF;
-	vector<int> n_arr;
+	point p[4];
+	int k[8];
 	for(int i=0;i<4;++i) {
-		cin >> spot[i][0] >> spot[i][1];
-		my_insert(abs(spot[i][0]), n_arr);
-		my_insert(abs(spot[i][1]), n_arr);
+		int x, y;
+		scanf("%d%d", &x,&y);
+		p[i].x = x;
+		p[i].y = y;
 	}
-	int d[4][4];
-	int g_min = INF;
-	int g_idx = -1;
-	for(auto it = n_arr.begin(); it != n_arr.end(); ++it) {
-		int n = (*it);
-		for(int i=0;i<4;++i) {
-			d[i][0] = m_distance(spot[i][0], spot[i][1],  n,  n);
-			d[i][1] = m_distance(spot[i][0], spot[i][1], -n,  n);
-			d[i][2] = m_distance(spot[i][0], spot[i][1],  n, -n);
-			d[i][3] = m_distance(spot[i][0], spot[i][1], -n, -n);
+	long long min_f = -1;
+	long long min_min_x = -1;
+	for(int ri=0;ri<24;++ri) {
+		int* rot = rotation[ri];
+		int pi1 = rot[0], pi2 = rot[1], pi3 = rot[2], pi4 = rot[3];
+		k[0] =   p[pi1].x ; k[1] =   p[pi1].y ;
+		k[2] =   p[pi2].x ; k[3] = -(p[pi2].y);
+		k[4] = -(p[pi3].x); k[5] =   p[pi3].y ;
+		k[6] = -(p[pi4].x); k[7] = -(p[pi4].y);
+		std::sort(k, k+8);
+		long long min_x = k[4];
+		long long f = 0;
+		for(int i=0;i<8;++i) {
+			f += abs((long long)min_x - k[i]);
 		}
-		int min_dsum = INF;
-		for(int i=0;i<24;++i) {
-			int* case_set = search_case[i];
-			int dsum = d[0][case_set[0]] + d[1][case_set[1]] + d[2][case_set[2]] + d[3][case_set[3]];
-			if(min_dsum > dsum) min_dsum = dsum;
-		}
-		if(g_min > min_dsum) {
-			g_min = min_dsum;
-			g_idx = n;
-		} else if(g_min == min_dsum && n > g_idx) {
-			g_idx = n;
+		// printf("{%d,%d,%d,%d}: %d, %lld\n", pi1, pi2, pi3, pi4, min_x, f);
+		if(min_f > f || min_f == -1) {
+			min_f = f;
+			min_min_x = min_x * 2;
 		}
 	}
-	cout << (g_idx << 1);
+	printf("%lld",abs(min_min_x));
 }

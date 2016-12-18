@@ -1,83 +1,61 @@
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+
+char cmd_str[100001];
+char arr_str[100000*3+1];
+int  arr[100000];
+int n;
+int arr_idx;
 
 int main(void)
 {
 	int T;
-	char command[100000];
-	char arrstring[400000];
-	int arr[100000];
-	int arrsize;
-	int c_arrsize;
 	scanf("%d", &T);
-	for(int testidx=0; testidx<T; ++testidx) {
-		scanf("%s %d %s", command, &c_arrsize, arrstring);
-		int len_arrstring = strlen(arrstring);
-		int len_command = strlen(command);
-		int inter = 0;
-		int rev = 0;
-		arrsize = 0;
-		if(len_arrstring > 2){
-			for(int charidx=1; charidx<len_arrstring; ++charidx) {
-				char val = arrstring[charidx];
-				if('0' <= val && val <= '9') {
-					inter = inter * 10 + (val - '0');
-				}
-				else {
-					arr[arrsize++] = inter;
-					inter = 0;
-				}
+	for(int case_idx=0; case_idx < T; ++case_idx) {
+		scanf("%s%d%s", cmd_str, &n, arr_str);
+		arr_idx = 0;
+		int front_del = 0, back_del = 0;
+		bool reversed = false;
+		for(char* i=cmd_str; (*i) != '\0'; ++i) {
+			if((*i) == 'R') {
+				reversed = !reversed;
+			}
+			else if((*i) == 'D') {
+				if(reversed) ++back_del;
+				else         ++front_del;
 			}
 		}
-		if(arrsize != c_arrsize) {
-			printf("error");
-			if(testidx < T-1) printf("\n");
+		if(back_del + front_del > n) {
+			printf("error\n");
 			continue;
 		}
-		int start = 0;
-		int end = arrsize;
-		int forceend = 0;
-		for(int charidx=0; charidx<len_command; ++charidx) {
-			int val = command[charidx];
-			if(val == 'R') {
-				rev = (rev == 0 ? 1 : 0);
+		else if(back_del + front_del == n) {
+			printf("[]\n");
+			continue;
+		}
+		int integer_buf = 0;
+		for(char* i=arr_str; (*i) != '\0'; ++i) {
+			char ch = (*i);
+			if('0' <= ch && ch <= '9') {
+				integer_buf = integer_buf * 10 + (ch - '0');
 			}
-			else if(val == 'D'){ // D
-				if(start >= end) {
-					printf("error");
-					if(testidx < T-1) printf("\n");
-					forceend = 1;
-					break;
-				}
-				if(rev == 0) start++;
-				else end--;
-			}
-			else {
-				printf("error");
-				if(testidx < T-1) printf("\n");
-				forceend = 1;
-				break;
+			else if(ch == ',' || ch == ']') {
+				arr[arr_idx++] = integer_buf;
+				integer_buf = 0;
 			}
 		}
-		if(forceend) continue;
-		if(rev == 0) {
-			printf("[");
-			for(int i=start;i<end;++i) {
-				printf("%d", arr[i]);
-				if(i != end-1) printf(",");
+		printf("[");
+		if(reversed) {
+			for(int i=n-1-back_del; i >= front_del + 1; --i) {
+				printf("%d,", arr[i]);
 			}
-			printf("]");
-		}
-		else {
-			printf("[");
-			for(int i=end-1;i>=start;--i) {
-				printf("%d", arr[i]);
-				if(i != start) printf(",");
+			printf("%d]\n", arr[front_del]);
+		} else {
+			for(int i=front_del; i<n-back_del-1; ++i) {
+				printf("%d,", arr[i]);
 			}
-			printf("]");
+			printf("%d]\n", arr[n-back_del-1]);
 		}
-		if(testidx < T-1) printf("\n");
 	}
-
-	return 0;
 }

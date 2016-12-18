@@ -3,20 +3,22 @@
 
 int main(void)
 {
-	char str[1000000];
+	char str[1000001];
 	int len;
-	fgets(str, 1000000, stdin);
+	fgets(str, 1000001, stdin);
 	len = strlen(str);
-	if(len<2) {
-		printf("0");
-		return 0;
-	}
 	int cnt = 0;
+	bool switch_ = false;
 	for(int i=0;i<len;++i) {
-		if(str[i] == ' ') {
-			cnt++;
+		char ch = str[i];
+		if(!switch_ && ch != ' ') {
+			switch_ = true;
+			++cnt;
+		}
+		else if(switch_&& ch == ' ') {
+			switch_ = false;
 		}
 	}
-	printf("%d", cnt + 1);
+	printf("%d", cnt);
 	return 0;
 }

@@ -1,157 +1,221 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
-#include <queue>
-#include <algorithm>
+#include <deque>
 using namespace std;
+#define INF 0x3FFFFFFF
 
-#define INF 0x7FFFFFFF
-
-class HungarianMethod
+struct edge
 {
-public:
-	vector< vector<int> > cost;
-	int n;
-	int max_match;
-	vector<int> lx;
-	vector<int> ly;
-	vector<int> xy;
-	vector<int> yx;
-	vector<bool> S;
-	vector<bool> T;
-	vector<int> slack;
-	vector<int> slackx
-	vector<int> prev;
-public:
-	HungarianMethod(vector< vector<int> > mat)
-	{
-		cost = mat;
-		n = cost.size();
-	}
-	void init_labels()
-	{
-		lx.resize(n); ly.resize(n, 0);
-		for(int i=0;i<n;++i) {
-			lx[i] = *max_element(cost[i].begin(), cost[i].end());
+	int from;
+	int to;
+	int cap;
+	int cost;
+};
+
+int map[500][500];
+bool floor[500];
+bool coin[500];
+int wb[500];
+int wb_idx;
+int bw[500];
+int bw_idx;
+int mat[250][250];
+int n, m;
+int mat_size;
+int graph_size;
+
+edge* make_edge(int from, int to, int cap, int cost)
+{
+	edge* e = new edge{from, to, cap, cost};
+	return e;
+}
+
+int rebuild(vector< vector<edge*> > &graph, vector<edge*> &track)
+{
+	int size = graph.size();
+	int cur = size - 1;
+	int min_cap = INF;
+	while(cur != 0) {
+		edge* e = track[cur];
+		if(e->cap < min_cap) {
+			min_cap = e->cap;
 		}
+		cur = e->from;
 	}
-	void add_to_tree(int x, int prevx)
-	{
-		S[x] = true;
-		prev[x] = prevx;
-		for(int y=0; y<n; ++y) {
-			if(lx[x] + ly[y]- cost[x][y] < slack[y]) {
-				slack[y] = lx[x] + ly[y] - cost[x][y]
-				slackx[y] = x;
-			}
-		}
+	cur = size - 1;
+	while(cur != 0) {
+		edge* e = track[cur];
+		e->cap -= min_cap;
+		cur = e->from;
 	}
-	void augment()
-	{
-		if(max_match == n) return;
-		int x, y, root;
-		queue<int> Q;
-		S.resize(n,false);
-		T.resize(n,false);
-		prev.resize(n,-1);
-		for(x=0;x<n;++x) {
-			if(xy[x] == -1) {
-				root = x;
-				Q.push(root);
-				prev[x] = -2;
-				S[x] = true;
+	cur = size - 1;
+	int cost_sum = 0;
+	while(cur != 0) {
+		edge* e = track[cur];
+		cost_sum += e->cost;
+		int u = e->to;
+		int v = e->from;
+		bool already = false;
+		for(auto it = graph[u].begin(); it != graph[u].end(); ++it) {
+			if((*it)->to == v) {
+				already = true;
+				(*it)->cap += min_cap;
 				break;
 			}
 		}
-		for(y=0;y<n;++y) {
-			slack[y] = lx[root] + ly[y] - cost[root][y];
-			slackx[y] = root;
+		if(!already) {
+			graph[u].push_back(make_edge(u,v,min_cap,(-1)*(e->cost)));
 		}
-		while(true){
-			while(!(Q.empty())) {
-				x = Q.front(); Q.pop();
-				for(y=0;y<n;++y) {
-					if(cost[x][y] == lx[x] + ly[y] && !T[y]) {
-						if(yx[y] == -1) break;
-						T[y] = true;
-						Q.push(yx[y]);
-						add_to_tree(yx[y], x);
-					}
-				}
-				if(y<n) break;
-			}
-			if(y<n) break;
-			update_labels();
-			Q.clear();
-			for(y=0;y<n;++y) {
-				if(!T[y] && slack[y] == 0) {
-					if(yx[y] == -1) {
-						x = slackx[y];
+		cur = e->from;
+	}
+	return min_cap * cost_sum;
+}
+
+bool spfa(vector< vector<edge*> > &graph, vector<edge*> &track)
+{
+	int size = graph.size();
+	deque<int> Q;
+	vector<int> k(size, INF);
+	k[0] = 0;
+	Q.push_back(0);
+	while(!(Q.empty()))
+	{
+		int u = Q.front(); Q.pop_front();
+		for(auto it = graph[u].begin(); it != graph[u].end(); ++it) {
+			if((*it)->cap <= 0) continue;
+			int v = (*it)->to;
+			int new_k = k[u] + (*it)->cost;
+			if(new_k < k[v]) {
+				k[v] = new_k;
+				track[v] = (*it);
+				bool already = false;
+				for(auto it2 = Q.begin(); it2 != Q.end(); ++it2) {
+					if((*it2) == v) {
+						already = true;
 						break;
 					}
-					else {
-						T[y] = true;
-						if(!S[yx[y]]) {
-							Q.push(yx[y]);
-							add_to_tree(yx[y] slackx[y]);
-						}
-					}
+				}
+				if(!already) {
+					Q.push_back(v);
 				}
 			}
-			if(y<n) break;
-		}
-		if(y<n) {
-			max_match++;
-			for(int cx=x, cy=y, ty; cx != -2; cx=prev[cx], cy = ty) {
-				ty = xy[cx];
-				yx[cy] = cx;
-				xy[cx] = cy;
-			}
-			augment();
 		}
 	}
-	void update_labels() 
-	{
-		int delta = INF;
-		for(int y=0; y<n; ++y) {
-			if(!T[y]) {
-				delta = min(delta, slack[y]);
-			}
-		}
-		for(int x=0; x<n; ++x) {
-			if(S[x]) {
-				lx[x] -= delta;
-			}
-		}
-		for(int y=0; y<n; ++y) {
-			if(T[y]) {
-				ly[y] += delta;
-			}
-			else {
-				slack[y] -= delta;
+	return k[size-1] != INF;
+}
+
+int mcmf(vector< vector<edge*> > &graph)
+{
+	int size = graph.size();
+	vector<edge*> track(size);
+	int cs = 0;
+	while(spfa(graph, track)) {
+		cs += rebuild(graph, track);
+	}
+	return cs;
+}
+
+int get_min_cost()
+{
+	graph_size = (mat_size<<1) + 2;
+	vector< vector<edge*> > graph(graph_size);
+	for(int i=0;i<mat_size;++i) {
+		graph[0].push_back(make_edge(0,1+i,1,0));
+	}
+	for(int i=0;i<mat_size;++i) {
+		for(int j=0;j<mat_size;++j) {
+			if(mat[i][j] || 1) {
+				graph[1+i].push_back(make_edge(1+i,1+mat_size+j,1,mat[i][j]));
 			}
 		}
 	}
-	int Do()
-	{
-		max_match = 0;
-		fill(xy.begin(), xy.end(), -1);
-		fill(yx.begin(), yx.end(), -1);
-		init_labels();
-		augment();
+	for(int i=0;i<mat_size;++i) {
+		graph[1+mat_size+i].push_back(make_edge(1+mat_size+i,graph_size-1,1,0));
+	}
+	return mcmf(graph);
+}
+
+void map_floyd()
+{
+	for(int k=0;k<n;++k) {
+		for(int i=0;i<n;++i) {
+			for(int j=0;j<n;++j) {
+				int new_weight = map[i][k] + map[k][j];
+				if(new_weight < map[i][j]) {
+					map[i][j] = new_weight;
+				}
+			}
+		}
 	}
 }
 
-int main(int argc, char** argv)
+void RUN()
 {
-	vector< vector<int> > mat = {
-		{1,0,0},
-		{0,1,0},
-		{0,0,1}
-	};
-	HungarianMethod hungarian(mat);
-	hungarian.Do();
-	for_each(hungarian.xy.begin(), hungarian.xy.end(), [](int tmp) {
-		cout << tmp << " ";
-	});
-	return 0;
+	scanf("%d%d", &n,&m);
+	for(int i=0;i<n;++i) for(int j=0;j<n;++j) map[i][j] = INF;
+	for(int i=0;i<m;++i) {
+		int a, b;
+		scanf("%d%d", &a,&b); --a; --b;
+		map[a][b] = 1;
+		map[b][a] = 1;
+	}
+	map_floyd();
+	for(int i=0;i<n;++i) {
+		int val; scanf("%d", &val);
+		floor[i] = (val&1);
+	}
+	for(int i=0;i<n;++i) {
+		int val; scanf("%d", &val);
+		coin[i] = (val&1);
+	}
+	wb_idx = 0; bw_idx = 0;
+	for(int i=0;i<n;++i) {
+		     if(!floor[i] &&  coin[i]) bw[bw_idx++] = i;
+		else if( floor[i] && !coin[i]) wb[wb_idx++] = i;
+	}
+	mat_size = wb_idx;
+	for(int i=0;i<mat_size;++i) {
+		int wb_val = wb[i];
+		for(int j=0;j<mat_size;++j) {
+			int bw_val = bw[j];
+			mat[i][j] = map[wb_val][bw_val];
+		}
+	}
+	int pre_value = 0;
+	int min_value;
+	for(int i=0;i<mat_size;++i) {
+		min_value = INF;
+		for(int j=0;j<mat_size;++j) {
+			if(mat[i][j] < min_value) {
+				min_value = mat[i][j];
+			}
+		}
+		for(int j=0;j<mat_size;++j) {
+			mat[i][j] -= min_value;
+		}
+		pre_value += min_value;
+	}
+	for(int i=0;i<mat_size;++i) {
+		min_value = INF;
+		for(int j=0;j<mat_size;++j) {
+			if(mat[j][i] < min_value) {
+				min_value = mat[j][i];
+			}
+		}
+		for(int j=0;j<mat_size;++j) {
+			mat[j][i] -= min_value;
+		}
+		pre_value += min_value;
+	}
+	int min_cost = get_min_cost();
+	printf("%d\n", min_cost + pre_value);
+}
+
+int main(void)
+{
+	int T;
+	scanf("%d", &T);
+	for(int test_idx=0; test_idx<T; ++test_idx) {
+		RUN();
+	}
 }

@@ -1,13 +1,8 @@
-#include <iostream>
-#include <map>
+#include <cstdio>
 
-using namespace std;
-
-
-int main(int argc, char** argv)
+int main(void)
 {
-	long long a = 0x7FFFFFFFFFFFFFFF;
-	cout << a << endl;
-
-	return 0;
+	long long a = 4;
+	a >>= 1;
+	printf("a: %d", a);
 }

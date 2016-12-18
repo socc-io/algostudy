@@ -1,8 +1,11 @@
-#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-int main(void)
+int main(int argc, char** argv)
 {
-	int N; std::cin >> N;
-	for(int i=1;i<=N;++i) std::cout << i << std::endl;
+	int n;
+	scanf("%d", &n);
+	for(int i=1;i<=n;++i) printf("%d\n", i);
 	return 0;
 }
