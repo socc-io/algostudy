@@ -1,0 +1,1018 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"coll",
+				"coll_cnt"
+			],
+			[
+				"stage",
+				"stage_2_adder"
+			],
+			[
+				"maxmat",
+				"maxMatch_DFS"
+			],
+			[
+				"getRea",
+				"getReachable_DFS"
+			],
+			[
+				"ylabl",
+				"ylabel_val"
+			],
+			[
+				"matching",
+				"matching_reverse"
+			],
+			[
+				"n",
+				"ns\tNamespace"
+			],
+			[
+				"augment",
+				"augment_path_idx"
+			],
+			[
+				"side",
+				"side_cnt"
+			],
+			[
+				"now_hole",
+				"now_hole_num"
+			],
+			[
+				"segment",
+				"segment_num"
+			],
+			[
+				"test_",
+				"test_segments"
+			],
+			[
+				"allow",
+				"allowColor_num"
+			],
+			[
+				"jae",
+				"jaeum_num"
+			],
+			[
+				"expl",
+				"explainationInput"
+			],
+			[
+				"getNow",
+				"getNowDinerPage〔function〕"
+			],
+			[
+				"getNowDine",
+				"getNowDinerPage"
+			],
+			[
+				"getDinerdisc",
+				"getDinerdiscountList〔function〕"
+			],
+			[
+				"getDinerdiscount",
+				"getDinerdiscountListService"
+			],
+			[
+				"customerNum",
+				"customerNumListContent"
+			],
+			[
+				"change",
+				"changePassword〔function〕"
+			],
+			[
+				"meeting",
+				"meetingExist"
+			],
+			[
+				"chat",
+				"chatRoomContainer"
+			],
+			[
+				"nextScene",
+				"nextSceneState〔variable〕"
+			],
+			[
+				"area_",
+				"area_dummy"
+			],
+			[
+				"purchase",
+				"purchase_authentication_key"
+			],
+			[
+				"ne",
+				"nextScene〔variable〕"
+			],
+			[
+				"cen",
+				"centerSpeech_speech"
+			],
+			[
+				"center",
+				"centerSpeech_obj"
+			],
+			[
+				"cetn",
+				"centerSpeech_speech〔variable〕"
+			],
+			[
+				"hope_sat",
+				"hope_satisfied_time"
+			],
+			[
+				"hope_satisfi",
+				"hope_satisfied_by_fb_id"
+			],
+			[
+				"Print",
+				"PrintHelloText_rect"
+			],
+			[
+				"make",
+				"MakeChasePlayerBullet〔function〕"
+			],
+			[
+				"next",
+				"nextSceneState〔variable〕"
+			],
+			[
+				"character",
+				"characterGunObject〔variable〕"
+			],
+			[
+				"charac",
+				"characterGunComponent〔variable〕"
+			],
+			[
+				"Left",
+				"LeftWall_BoxCollider〔variable〕"
+			],
+			[
+				"SCRE",
+				"SCREEN_WIDTH_HALF"
+			],
+			[
+				"test",
+				"testSpeech_speech〔variable〕"
+			],
+			[
+				"nextscene",
+				"nextSceneState"
+			],
+			[
+				"nextsce",
+				"nextSceneState〔variable〕"
+			],
+			[
+				"net",
+				"nextSceneState〔variable〕"
+			],
+			[
+				"CHAR",
+				"CHARACTER_JUMP_FORCE〔variable〕"
+			],
+			[
+				"CHARAC",
+				"CHARACTER_HORIZONTAL_SPEED〔variable〕"
+			],
+			[
+				"COLLI",
+				"COLLIDER_TYPE_CIRCLE〔variable〕"
+			],
+			[
+				"faugment",
+				"fAugmentTracker"
+			],
+			[
+				"fAugmentTracker",
+				"fAugmentTrackerIndex"
+			],
+			[
+				"string_ges",
+				"STRING_GUESSNUMBER_ANSWER\t(statement)"
+			],
+			[
+				"STRING_GUESS",
+				"STRING_GUESSNUMBER_ANSWER\t(statement)"
+			],
+			[
+				"STRING",
+				"STRING_GUESSNUMBER_ANSWER\t(statement)"
+			],
+			[
+				"STRING_GUES",
+				"STRING_GUESSNUMBER_TRY\t(statement)"
+			],
+			[
+				"push",
+				"push_back\tfunc"
+			],
+			[
+				"device",
+				"deviceNum"
+			],
+			[
+				"devie",
+				"deviceNum"
+			],
+			[
+				"p",
+				"p\tTag"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++/C++ Single File.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/C++ Starting Kit/C++ - Starting Kit.sublime-build",
+					""
+				],
+				[
+					"Packages/C++ Starting Kit/C++ - Starting Kit.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/C++11/C++11.sublime-build",
+					""
+				],
+				[
+					"Packages/C++11/C++11.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/C++ Starting Kit/C++ - Starting Kit.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 97.0,
+		"last_filter": "syntax C++",
+		"selected_items":
+		[
+			[
+				"syntax C++",
+				"Set Syntax: C++"
+			],
+			[
+				"C++",
+				"Build With: C++ compile"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"sql",
+				"Set Syntax: SQL"
+			],
+			[
+				"python",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"C compile",
+				"Build With: C compile"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"",
+				"BracketHighlighter: Toggle String Bracket Escape Mode"
+			],
+			[
+				"python run",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"sublime",
+				"SublimeREPL: Python"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"node",
+				"Nodejs::Run::Current File"
+			],
+			[
+				"node ",
+				"Nodejs::Run::Current File"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"ajva",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"markdown",
+				"Markdown Preview: Save to HTML"
+			],
+			[
+				"Package Control remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"set syn ejs",
+				"Set Syntax: EJS (<% and %>)"
+			],
+			[
+				"ejs",
+				"Snippet: <%(=) 'insert ejs tags' %>"
+			],
+			[
+				"javascript",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"markmon",
+				"Markmon launch"
+			],
+			[
+				"markmkon",
+				"Preferences: Markmon Key Bindings – Default"
+			],
+			[
+				"preview",
+				"Markdown HTML Preview"
+			],
+			[
+				"nodejs",
+				"Nodejs::Run::Current File"
+			],
+			[
+				"syntax C",
+				"Set Syntax: C++"
+			],
+			[
+				"jsp",
+				"Set Syntax: Java Server Page (JSP)"
+			],
+			[
+				"set syntax: ",
+				"Set Syntax: SQL"
+			],
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"set syntax python",
+				"Set Syntax: Python"
+			],
+			[
+				"git commit",
+				"Set Syntax: Git Commit Message"
+			],
+			[
+				"git commit ",
+				"Git: Commit"
+			],
+			[
+				"git add",
+				"Git: Add All"
+			],
+			[
+				"pdb",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"PYTHON",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"pyt",
+				"SublimeREPL: Python"
+			],
+			[
+				"shell",
+				"SublimeREPL: Shell"
+			],
+			[
+				"run console",
+				"SublimeREPL: Python - Sublime Text Console"
+			],
+			[
+				"pytho",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"pyth",
+				"Build With: Python"
+			],
+			[
+				"remove package",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"python import",
+				"Python Refactor: Organize Imports"
+			],
+			[
+				"build",
+				"Build With: C++11"
+			],
+			[
+				"c++",
+				"Build With: C++ Single File - Run"
+			],
+			[
+				"pytohn",
+				"Python Refactor: Rename"
+			],
+			[
+				"sublimerepl python",
+				"SublimeREPL: Python"
+			],
+			[
+				"pythin",
+				"Set Syntax: PythonImproved"
+			],
+			[
+				"php",
+				"SublimeREPL: PHP"
+			],
+			[
+				"ruby",
+				"SublimeREPL: Ruby"
+			],
+			[
+				"python ru",
+				"SublimeREPL: Python - RUN current file"
+			]
+		],
+		"width": 472.0
+	},
+	"console":
+	{
+		"height": 162.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Frog/frogFlask"
+	],
+	"file_history":
+	[
+		"/C/Repo/algoStudy/baekjoon/smilu/tmp.cpp",
+		"/C/Repo/hcpc/tmp2.cpp",
+		"/C/Frog/bookking/src/main/resources/static/js/main.js",
+		"/C/Repo/tmp.cpp",
+		"/C/Users/smilu/AppData/Roaming/Sublime Text 3/Packages/Fuse/UserGuide.txt",
+		"/C/Frog/bookking/sample_data.sql",
+		"/C/Frog/bookking/src/main/resources/templates/web/dinermain.web",
+		"/C/Repo/algo/tmp.cpp",
+		"/C/Repo/algo/tmp.py",
+		"/C/Repo/algo/tmp2.py",
+		"/C/Repo/algo/11493_1.cpp",
+		"/C/Repo/algo/11493_2.cpp",
+		"/C/Repo/mymud/run.cpp",
+		"/C/Users/smilu/AppData/Roaming/Sublime Text 3/Packages/User/C++ compile.sublime-build",
+		"/C/Repo/codemonster/tmp.cpp",
+		"/C/Repo/codemonster/2.txt",
+		"/C/Repo/codemonster/1/1.cpp",
+		"/C/Repo/codemonster/2.cpp",
+		"/C/Repo/codemonster/2/input_small.txt",
+		"/C/Repo/codemonster/2/2.cpp",
+		"/C/Repo/codemonster/1.cpp",
+		"/C/Repo/algo/12779_2.cpp",
+		"/C/Repo/algo/12779.cpp",
+		"/D/Repos/CMove/character.cpp",
+		"/D/Repos/CMove/character.h",
+		"/D/Repos/CMove/floor.cpp",
+		"/D/Repos/CMove/cmove.cpp",
+		"/D/Repos/CMove/util.cpp",
+		"/D/Repos/CMove/util.h",
+		"/D/Repos/CMove/constants.h",
+		"/D/Repos/CMove/Makefile",
+		"/D/Repos/CMove/floor.h",
+		"/D/Frog/word/160926.txt",
+		"/C/Users/smilu/AppData/Roaming/Sublime Text 3/Packages/User/C compile.sublime-build",
+		"/C/Users/smilu/AppData/Roaming/Sublime Text 3/Packages/User/CppBuilder.sublime-settings",
+		"/C/Repos/algo/11727.cpp",
+		"/C/Repos/algo/tmp.py",
+		"/C/Repos/algo/11403.cpp",
+		"/C/Repos/algo/7507.cpp",
+		"/C/Repos/algo/1463.cpp",
+		"/C/Repos/algo/1149.cpp",
+		"/C/Repos/hyuCreative/guessthenumber",
+		"/C/Repos/hyuCreative/homework7.cpp",
+		"/C/Repos/youngFix/11493.cpp",
+		"/C/Repos/youngFix/app.js",
+		"/C/Repos/youngFix/config/secrets.js",
+		"/C/Repos/youngFix/package.json",
+		"/C/Repos/youngFix/README.md",
+		"/C/Repos/algo/clap.cp",
+		"/C/Repos/algo/11401.cp",
+		"/C/Repos/algo/1260.cp",
+		"/C/Repos/algo/1929",
+		"/C/Repos/shinyeProblems/2.cpp",
+		"/C/Repos/shinyeProblems/1.cpp",
+		"/C/Repos/algo/fibocount.cpp",
+		"/C/Repos/algo/quicksort.cpp",
+		"/C/Repos/algo/1920.cpp",
+		"/C/Repos/tmp.cpp",
+		"/C/Repos/tmp.py",
+		"/C/Frog/bookking/build.gradle",
+		"/C/Users/Yeong Jin/Downloads/sqldump.sql",
+		"/C/Frog/bookking/src/main/resources/templates/detail.mobile.vm",
+		"/C/Frog/bookking/schema.sql",
+		"/C/Frog/publish/m_v4 - transformed/login.mobile.html",
+		"/C/Frog/publish/m_v4 - transformed/join.mobile.html",
+		"/C/Frog/publish/m_v4 - transformed/main.mobile.html",
+		"/C/Frog/publish/m_v4 - transformed/detail.mobile.html",
+		"/C/Frog/publish/m_v4 - transformed/coupon.mobile.html",
+		"/C/Frog/publish/m_v1/css/style.css",
+		"/C/Frog/publish/m_v1/js/content.js",
+		"/C/Users/Yeong Jin/Downloads/localdump.sql",
+		"/C/Users/Yeong Jin/Desktop/bookking_product_info.sql",
+		"/C/Users/Yeong Jin/Desktop/bookking_restaurant_info.sql",
+		"/C/Frog/frogAngular/app/main.ts",
+		"/C/Frog/frogAngular/app/sidebar/sidebar.component.html",
+		"/C/Frog/frogAngular/npm-debug.log",
+		"/C/Frog/bookking/.gitignore",
+		"/C/Frog/bookking/src/main/resources/schema.sql",
+		"/C/Repos/nodejs-aaa/schema.sql",
+		"/C/Users/Yeong Jin/Documents/workspace-sts-3.7.3.RELEASE/bookking/build.gradle",
+		"/H/home/smilu/flask_socc/templates/Day.py",
+		"/H/home/smilu/flask_socc/ChatRoom.py",
+		"/C/Repos/g_frog/search.md",
+		"/C/Users/Yeong Jin/AppData/Local/Temp/_AZTMP3_/build.gradle",
+		"/C/Repos/g_frog/g_frog/.project",
+		"/C/Repos/g_frog/alarm.md",
+		"/C/Users/Yeong Jin/AppData/Local/Temp/_AZTMP1_/common.cpp",
+		"/C/Users/Yeong Jin/AppData/Local/Temp/_AZTMP0_/KickList.cpp",
+		"/C/Repos/frog_node/search.md",
+		"/C/Repos/pycrawler/crawl.py",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/dao/diners/DinersDAO.java",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/services/diners/DinersServiceImpl.java",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/vo/DinersVO.java",
+		"/C/Repos/g_frog/g_frog2/src/main/webapp/WEB-INF/jsp/view/dinersSearch.jsp",
+		"/C/Repos/g_frog/g_frog2/src/main/resources/net/frog/dao/Diners_DAO.xml",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/services/diners/DinersService.java",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/controller/DinersController.java",
+		"/C/Repos/g_frog/g_frog2/build.gradle",
+		"/C/Repos/g_frog/g_frog2/src/main/java/net/frog/controller/UsersController.java",
+		"/H/home/smilu/python/foodParser.py",
+		"/C/Repos/nodejs-aaa/views/uploadtester.ejs",
+		"/C/Repos/nodejs-aaa/views/postcontent.ejs",
+		"/C/Repos/nodejs-aaa/testa.js",
+		"/C/Repos/nodejs-aaa/testb.js",
+		"/C/Repos/nodejs-aaa/views/testb.js",
+		"/C/Repos/nodejs-aaa/service/postService.js",
+		"/C/Repos/nodejs-aaa/router/postRouter.js",
+		"/C/Repos/nodejs-aaa/views/postlist.ejs",
+		"/C/Repos/nodejs-aaa/views/postpage.ejs",
+		"/C/Repos/nodejs-aaa/views/header.ejs",
+		"/C/Repos/nodejs-aaa/views/signup.ejs",
+		"/C/Repos/nodejs-aaa/views/signin.ejs",
+		"/C/Repos/nodejs-aaa/views/postmodify.ejs",
+		"/C/Users/Yeong Jin/Documents/Sublime/testing.cpp",
+		"/C/Repos/nodejs-aaa/views/board.ejs",
+		"/C/Repos/nodejs-aaa/views/create_postpage.ejs",
+		"/C/Repos/g_frog/down/g_frog/src/main/java/net/frog/services/PostServiceImpl.java",
+		"/C/Repos/g_frog/down/g_frog/src/main/java/net/frog/dao/PostDAO.java",
+		"/C/Repos/nodejs-aaa/router/main.js",
+		"/C/Repos/nodejs-aaa/views/index.ejs",
+		"/C/Users/Yeong Jin/Documents/Games/Liru 1.0.0.3/Liru 1.0.0.3/Content/XML/config.xml",
+		"/C/Users/Yeong Jin/Documents/Games/Liru 1.0.0.3/Liru 1.0.0.3/Content/XML/scene/sceneList_Dinner.xml",
+		"/C/Repos/ruliweb_crawler/output.html",
+		"/C/Repos/algo/scpc/shoes.cpp",
+		"/C/Repos/algostudy/MaximumFlowWorld/pigs/smilu97.cpp",
+		"/C/Repos/algostudy/smilu97/job_assignment.cpp",
+		"/C/Repos/algo/test.exe",
+		"/C/Users/Yeong Jin/Documents/Machine/LinearRegression.py"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"mobilefileInput",
+			"cout",
+			"ll",
+			"y[n]",
+			"x[n]",
+			"ㅇ3ㄷ말웈아",
+			"mainimage",
+			"label for=\"",
+			"mainimage",
+			"owner\narea1\narea2\narea3\ncategory\ndinercall\ndinername\nstarttime\nendtime\nexplaination\nintro\nsubintro\ntip\nlatitude\nlongitude\nnormalcost\npostaddress\nroadaddress\nrestday\nmainimage",
+			"\\",
+			")",
+			"btn_reserve",
+			"지금 예약하기",
+			"btn_reserve_now",
+			"children",
+			"dinerno",
+			"#set",
+			"Mainpage",
+			"cout <<",
+			"sub",
+			".",
+			"right",
+			"pos",
+			"vector_sort_end",
+			"end",
+			"augment",
+			"queue<int>",
+			"matching_y",
+			"matching_x",
+			"matching",
+			"cnt_match",
+			"cout",
+			"equal[*it]",
+			"printMat",
+			".find",
+			"find",
+			"xv",
+			"n",
+			"xlabel",
+			"map",
+			"float",
+			"double",
+			"i",
+			"float",
+			"double",
+			"mings",
+			"sett[from]",
+			"sett",
+			"set",
+			"sett",
+			"cin",
+			" 1 \n ",
+			" 1 ",
+			"997",
+			"+",
+			"INFINITE",
+			"cin",
+			"ming",
+			"999999",
+			"int",
+			"0x0804a0a0",
+			"*",
+			"\t\n",
+			"typeNum",
+			"chartR",
+			"chartQ",
+			"getCost",
+			"mincost",
+			"last.cost",
+			"end",
+			"prevplan",
+			"arr",
+			"start",
+			"allowColors[i]",
+			"startPoint",
+			"minpoint",
+			"allower",
+			"graph",
+			"mailgun",
+			"login",
+			"mongo",
+			"done",
+			"postgres",
+			"mysql",
+			"error\\n",
+			"int",
+			"res",
+			"max_place_finder",
+			"mat",
+			"true",
+			"bool",
+			"OPE",
+			"ope",
+			"OPE",
+			"ope",
+			"OPE",
+			"adder",
+			"int i",
+			"mingraph",
+			"network",
+			"true",
+			"}\n",
+			"vector< vector<int> >",
+			"@Column",
+			"html",
+			"dinerdiscounts",
+			"@Column",
+			"explaination",
+			"endtime",
+			"<input",
+			"button",
+			"UpdateBt",
+			"\"PUT\"",
+			"PUT",
+			"btn btn-defaul",
+			")",
+			"for",
+			"<li class=\"list-group-item\"> ",
+			"</li>",
+			"explaination",
+			"isrealtime",
+			"src=\"",
+			"appendDiner",
+			"appendDiner()",
+			"dinerPage",
+			"dinerPage[nowcate1-1][nowcate2-1]",
+			"dinerPage"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 74.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.CppBuilder":
+	{
+		"height": 32.0
+	},
+	"output.FuseBuildResults":
+	{
+		"height": 116.0
+	},
+	"output.FuseError":
+	{
+		"height": 116.0
+	},
+	"output.exec":
+	{
+		"height": 152.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 170.0
+	},
+	"output.nodejs":
+	{
+		"height": 253.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 92.0
+	},
+	"pinned_build_system": "Packages/User/C++ compile.sublime-build",
+	"project": "frogFlask.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": false,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"tmp.cpp",
+				"tmp.cpp"
+			],
+			[
+				"13418",
+				"13418.cpp"
+			],
+			[
+				"tmp2.cpp",
+				"tmp2.cpp"
+			],
+			[
+				"13415",
+				"13415.cpp"
+			],
+			[
+				"13413",
+				"13413.cpp"
+			],
+			[
+				"9212",
+				"9212.cpp"
+			],
+			[
+				"python",
+				"*REPL* [python]"
+			],
+			[
+				"tmp",
+				"tmp.py"
+			],
+			[
+				"tmp.py",
+				"tmp.py"
+			],
+			[
+				"11493",
+				"11493.cpp"
+			],
+			[
+				"dinersvo",
+				"main\\java\\net\\frog\\vo\\DinersVO.java"
+			],
+			[
+				"howto",
+				"C:\\Repos\\howToPygame\\base.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 625.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 475.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 234.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

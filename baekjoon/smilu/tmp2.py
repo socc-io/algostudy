@@ -1,0 +1,1 @@
+s = ' '.join([''.join(list(k).reverse()) for k in raw_input().split()])
