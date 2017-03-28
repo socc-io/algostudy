@@ -6,14 +6,8 @@ using namespace std;
 
 int main(void)
 {
-	int n, m;
-	int **arr;
-	scanf("%d%d", &n,&m);
-	arr = new int*[n];
-	for(int i=0;i<n;++i) arr[i] = new int[m];
-
-	
-
-	for(int i=0;i<n;++i) delete[] arr[i];
-	delete[] arr;
+	int a, b;
+	scanf("%2d%2d", &a, &b);
+	printf("a:%d,b:%d\n", a, b);
+	return 0;
 }
