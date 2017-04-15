@@ -11,11 +11,12 @@ int main(void)
 	bool switch_ = false;
 	for(int i=0;i<len;++i) {
 		char ch = str[i];
+		if (ch == '\n') continue;
 		if(!switch_ && ch != ' ') {
 			switch_ = true;
 			++cnt;
 		}
-		else if(switch_&& ch == ' ') {
+		else if(switch_ && ch == ' ') {
 			switch_ = false;
 		}
 	}

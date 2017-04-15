@@ -1,13 +1,18 @@
 #include <cstdio>
 #include <cstdlib>
-#include <fstream>
-#include <string>
-using namespace std;
+#include <cstring>
 
-int main(void)
+int main (void)
 {
-	int a, b;
-	scanf("%2d%2d", &a, &b);
-	printf("a:%d,b:%d\n", a, b);
-	return 0;
+	int n;
+	int a_sum = 0;
+	int b_sum = 0;
+	scanf("%d", &n);
+	for(int i=0; i<n; ++i) {
+		int a, b;
+		scanf("%d%d", &a, &b);
+		a_sum += a;
+		b_sum += b;
+	}
+	printf("%d %d\n", a_sum, b_sum)
 }
