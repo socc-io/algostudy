@@ -2,13 +2,15 @@
 #include <cstdlib>
 #include <cstring>
 
+
 char a[1000];
 char b[1000];
 int lcs[1001][1001];
 
 int a_len, b_len;
 
-int max(int a, int b) { return a>b ? a:b; }
+template <class T>
+T max(T a, T b) { return a>b ? a:b; }
 
 int LCS()
 {

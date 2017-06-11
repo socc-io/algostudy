@@ -1,10 +1,12 @@
-#include <iostream>
-#include <queue>
+#include <istream>
+#include <ostream>
 using namespace std;
 
 int main(void)
 {
-	queue<int> Q;
-	Q.push(2);
-	printf("%d\n", Q.front());
+	int val;
+	cout << "val: "; cin >> val;
+	cout << "You gave me " << val << endl;
+	
+	return 0;
 }

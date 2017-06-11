@@ -16,6 +16,7 @@ int main(int argc, char** argv)
 	que[0] = starter;
 	int **graph = new int*[vertex_num];
 	int *entered = new int[vertex_num];
+	
 	for (int i = 0; i < vertex_num; ++i) {
 		graph[i] = new int[vertex_num];
 		entered[i] = 0;
@@ -23,6 +24,7 @@ int main(int argc, char** argv)
 			graph[i][j] = 0;
 		}
 	}
+
 	for (int i = 0; i < edge_num; ++i) {
 		int from, to;
 		scanf("%d %d", &from, &to);
@@ -43,6 +45,7 @@ int main(int argc, char** argv)
 			}
 		}
 	}
+
 	for (int i = 0; i < vertex_num; ++i) entered[i] = 0;
 	printf("\n");
 	while (que_start < que_end) {
