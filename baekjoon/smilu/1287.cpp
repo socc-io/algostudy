@@ -1,133 +1,124 @@
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <stack>
 
-const int OPE = 19283;
+using namespace std;
 
-int calculate(int *arr, int len)
+#define INF (0x7FFFFFFF)
+
+char infix[1001];
+char postfix[1001];
+
+int postfix_len = 0;
+
+long long calculate(long long a, long long b, char op)
 {
-	if((len & 1) == 0) {
-		return OPE;
-	}
-	int done;
-	while(len > 1) {
-		done = false;
-		for(int opIdx=1; opIdx<len; opIdx += 2) {
-			if(arr[opIdx] == '*') {
-				arr[opIdx-1] = arr[opIdx-1] * arr[opIdx+1];
-				for(int i=opIdx; i<len-2; ++i) {
-					arr[i] = arr[i+2];
-				}
-				len -= 2;
-				done = true;
-				break;
-			}
-			else if(arr[opIdx] == '/') {
-				arr[opIdx-1] = arr[opIdx-1] / arr[opIdx+1];
-				for(int i=opIdx; i<len-2; ++i) {
-					arr[i] = arr[i+2];
-				}
-				len -= 2;
-				done = true;
-				break;
-			}
-		}
-		if(done) continue;
-		if(len <= 1) break;
-		int opIdx = 1;
-		if(arr[opIdx] == '+') {
-			arr[opIdx-1] = arr[opIdx-1] + arr[opIdx+1];
-			for(int i=opIdx; i<len-2; ++i) {
-				arr[i] = arr[i+2];
-			}
-			len -= 2;
-			done = true;
-			break;
-		}
-		else if(arr[opIdx] == '-') {
-			arr[opIdx-1] = arr[opIdx-1] - arr[opIdx+1];
-			for(int i=opIdx; i<len-2; ++i) {
-				arr[i] = arr[i+2];
-			}
-			len -= 2;
-			done = true;
-			break;
-		}
-		else {
-			return OPE;
-		}
-	}
-	return arr[0];
+	if(op == '+') return a + b;
+	else if(op == '-') return a - b;
+	else if(op == '*') return a * b;
+	else if(op == '/') return a / b;
+	// fprintf(stderr, "calculate error: %c\n", op);
+	return a + b;
 }
 
-int main(int argc, char** argv)
+int get_prior(char ch)
 {
-	char str[2000];
-	int arr[2000];
-	int arrsize = 0;
-	scanf("%s", str);
-	int lenstr = strlen(str);
-	int stoi = 0;
-	int stoing = false;
-	for(int chidx=0;chidx<lenstr;++chidx) {
-		char ch = str[chidx];
-		if('0' <= ch && ch <= '9') {
-			stoing = true;
-			stoi = stoi * 10 + (ch - '0');
-		}
-		else if(ch == '(') {
-			arr[arrsize++] = OPE;
-			if(stoing) {
-				printf("ROCK");
-				return 0;
+	if(ch == '*') return 2;
+	else if(ch == '/') return 2;
+	else if(ch == '+') return 1;
+	else if(ch == '-') return 1;
+	// fprintf(stderr, "get_prior error: %c\n", ch);
+	return 1;
+}
+
+int infix_to_postfix()
+{
+	stack<char> S;
+
+	for(char* ch = infix; (*ch) != '\0'; ++ch) {
+		char sym = *ch;
+		if('0' <= sym && sym <= '9') {
+			postfix[postfix_len++] = sym;
+		} else if(sym == '(') {
+			S.push(sym);
+		} else if(sym == ')') {
+			while(1)
+			{
+				if(S.empty()) return -1;
+				char t = S.top();
+				S.pop();
+				if(t == '(')
+					break;
+				else {
+					postfix[postfix_len++] = t;
+				}
 			}
-		}
-		else if(ch == ')') {
-			if(stoing) {
-				arr[arrsize++] = stoi;
-				stoi = 0;
-				stoing = false;
+		} else {
+			while(1) {
+				if(S.empty()) break;
+				char t = S.top();
+				if(t == '(') break;
+				int t_prior = get_prior(t);
+				int sym_prior = get_prior(sym);
+				if(t_prior >= sym_prior) {
+					postfix[postfix_len++] = t;
+					S.pop();
+				} else {
+					break;
+				}
 			}
-			else {
-				printf("ROCK");
-				return 0;
-			}
-			int opeIdx;
-			for(opeIdx=arrsize-1; opeIdx >= 0; --opeIdx) {
-				if(arr[opeIdx] == OPE) break;
-			}
-			opeIdx++;
-			int local_len = arrsize - opeIdx;
-			stoi = calculate(arr + opeIdx, local_len);
-			if(stoi == OPE) {
-				printf("ROCK");
-				return 0;
-			}
-			stoing = true;
-			arrsize -= local_len + 1;
-		}
-		else {
-			if(stoing) {
-				arr[arrsize++] = stoi;
-				stoi = 0;
-				stoing = false;
-			}
-			else {
-				printf("ROCK");
-				return 0;
-			}
-			arr[arrsize++] = ch;
+			S.push(sym);
 		}
 	}
-	if(stoing) {
-		arr[arrsize++] = stoi;
-		stoi = 0;
-		stoing = false;
+
+	while(!(S.empty())) {
+		char t = S.top();
+		S.pop();
+		postfix[postfix_len++] = t;
 	}
-	int result = calculate(arr, arrsize);
-	if(result == OPE) {
+
+	return 0;
+}
+
+long long calculate_postfix()
+{
+	stack<long long> S;
+	for(char* ch = postfix; (*ch) != '\0'; ++ch) {
+		char sym = *ch;
+		if('0' <= sym && sym <= '9') {
+			S.push(sym - '0');
+		} else {
+			if(S.empty()) return INF;
+			long long a = S.top(); S.pop();
+			if(S.empty()) return INF;
+			long long b = S.top(); S.pop();
+			if(a == 0 && sym == '/') return INF;
+			long long c = calculate(b, a, sym);
+			S.push(c);
+		}
+	}
+
+	if(S.empty()) return INF;
+	return S.top();
+}
+
+int main(void)
+{
+	scanf("%s", infix);
+
+	int flag = infix_to_postfix();
+
+	if(flag == -1) {
 		printf("ROCK");
 		return 0;
 	}
-	printf("%d\n", result);
-	return 0;
+
+	// printf("postfix: %s\n", postfix);
+
+	long long res = calculate_postfix();
+
+	if(res != INF) {
+		printf("%lld", res);
+	} else {
+		printf("ROCK");
+	}
 }

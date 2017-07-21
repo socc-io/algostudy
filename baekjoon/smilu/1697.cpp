@@ -1,44 +1,52 @@
 #include <cstdio>
-#include <cstdlib>
-#include <cmath>
+#include <queue>
 
-int src, dest;
+int min_cost[100001];
 
-int abs(int val) {
-	if(val < 0)
-		return val * (-1); 
-	return val;
-}
+#define INF (0x7FFFFFFF)
 
 int main(void)
 {
+	for(int i=0; i<100001; ++i) {
+		min_cost[i] = INF;
+	}
+
+	int src, dest;
 	scanf("%d%d", &src, &dest);
 
-	int cost = 0;
-	int min_cost = 0;
+	std::queue<int> Q;
+	Q.push(src);
+	min_cost[src] = 0;
 
-	int log_src  = log2(src);
-	int log_dest = log2(dest);
-	int log_offset = log_dest - log_src;
+	while(!Q.empty()) {
+		int f = Q.front(); Q.pop();
+		int c = min_cost[f];
+		int k;
 
-	if(log_offset > 0) {
-		cost += abs((dest >> log_offset) - src);
-		cost += log_offset;
-		for(int i=0; i<log_offset; ++i) {
-			if(dest & (1 << i)) {
-				cost++;
+		if(f == dest) {
+			printf("%d", c);
+			return 0;
+		}
+
+		if(f < dest) {
+			k = f << 1;
+			if(k <= 100000 && min_cost[k] == INF) {
+				Q.push(k);
+				min_cost[k] = c + 1;
 			}
 		}
 
-		min_cost = cost;
+		k = f + 1;
+		if(k <= 100000 && min_cost[k] == INF) {
+			Q.push(k);
+			min_cost[k] = c + 1;
+		}
 
-		cost = 0;
-		
-	} else {
-		cost = abs(src - dest);
+		k = f - 1;
+		if(k <= 100000 && min_cost[k] == INF) {
+			Q.push(k);
+			min_cost[k] = c + 1;
+		}
 	}
 
-	printf("%d", cost);
-
-	return 0;
 }

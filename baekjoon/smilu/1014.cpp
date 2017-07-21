@@ -1,123 +1,104 @@
 #include <cstdio>
-#include <cstdlib>
 
-FILE *fp;
-char tile[11][11];
 int N, M;
+char tile[11][11];
 
-int leftRight[100];
-int rightLeft[100];
-int conn[100][100];
-int idxmap[100][100];
+int visited[100];
+int match[100];
 
-int leftNum, rightNum;
+int left_cnt;
+int right_cnt;
 
-bool tryConnect(int left)
+int left_able[100];
+int right_able[100];
+
+int offsets[6];
+
+int try_match(int u)
 {
-	if(leftRight[left] != -1) return false;
-	for(int right=0; right<rightNum; ++right) {
-		if(conn[left][right] == 0) continue;
-		if(rightLeft[right] == -2) continue;
-		if(rightLeft[right] == -1) {
-			leftRight[left] = right;
-			rightLeft[right] = left;
-			return true;
-		}
-		else {
-			int oleft = rightLeft[right];
-			leftRight[oleft] = -1;
-			rightLeft[right] = -2;
-			if(tryConnect(oleft)) {
-				leftRight[left] = right;
-				rightLeft[right]= left;
-				return true;
-			}
-			else {
-				leftRight[oleft] = right;
-				rightLeft[right] = oleft;
-			}
+	if(!left_able[u]) return 0;
+	if(visited[u]) return 0;
+
+	visited[u] = 1;
+
+	int row = u % N;
+
+	for(int offset_idx=(row == 0 ? 2 : 0); offset_idx<(row == N - 1 ? 4 : 6); ++offset_idx) {
+
+		int v = u + offsets[offset_idx];
+
+		if(v < 0 || v >= right_cnt) continue;
+		if(!right_able[v]) continue;
+
+		if(match[v] == -1 || try_match(match[v])) {
+			match[v] = u;
+			return 1;
 		}
 	}
-	return false;
+
+	return 0;
 }
 
-void build(int x1, int y1, int x2, int y2) {
-	if(y1 < 0 || M <= y1 || y2 < 0 || M <= y2) return;
-	if(tile[x2][y2] != '.') return;
-	int left = idxmap[x2][y2];
-	int right = idxmap[x1][y1];
-	conn[left][right] = 1;
-}
-
-void run()
+void do_task()
 {
+	int dot_cnt = 0;
+
 	scanf("%d%d", &N, &M);
 	for(int i=0; i<N; ++i) {
 		scanf("%s", tile[i]);
 	}
-	int dotnum = 0;
-	for(int i=0; i<N; ++i) {
-		for(int j=0; j<M; ++j) {
-			if(tile[i][j] == '.') ++dotnum;
-		}
-	}
-	int k=0;
-	for(int i=0; i<N; ++i) {
-		for(int j=0; j<M; j+=2) {
-			idxmap[i][j] = k++;
-		}
-	}
-	leftNum = k;
-	k=0;
-	for(int i=0; i<N; ++i) {
-		for(int j=1; j<M; j+=2) {
-			idxmap[i][j] = k++;
-		}
-	}
-	rightNum = k;
-	for(int i=0; i<100; ++i) {
-		for(int j=0; j<100; ++j) {
-			conn[i][j] = 0;
-		}
-		leftRight[i] = -1;
-		rightLeft[i] = -1;
-	}
-	for(int i=0; i<N; ++i) {
-		for(int j=0; j<M; ++j) {
-			if(tile[i][j] != '.') continue;
-			build(i, j, i-1, j-1);
-			build(i, j, i,   j-1);
-			build(i, j, i-1, j+1);
-			build(i, j, i,   j+1);
-		}
-	}
-	int cnt = 0;
-	while(true) {
-		bool flag = true;
-		for(int i=0; i<leftNum; ++i) {
-			if(tryConnect(i)) {
-				flag = false;
-				++cnt;
+
+	left_cnt = 0;
+	for(int y=0; y<M; y+=2) {
+		for(int x=0; x<N; ++x) {
+			if(tile[x][y] == '.') {
+				left_able[left_cnt++] = 1;
+				dot_cnt++;
+			} else {
+				left_able[left_cnt++] = 0;
 			}
 		}
-		if(flag) break;
 	}
-	for(int left=0; left<leftNum; ++left) {
-		if(leftRight[left] != -1) {
-			
+
+	right_cnt = 0;
+	for(int y=1; y<M; y+=2) {
+		for(int x=0; x<N; ++x) {
+			if(tile[x][y] == '.') {
+				right_able[right_cnt++] = 1;
+				dot_cnt++;
+			} else {
+				right_able[right_cnt++] = 0;
+			}
 		}
 	}
-	printf("%d\n", dotnum-cnt);
+
+	for(int i=0; i<right_cnt; ++i) {
+		match[i] = -1;
+	}
+
+	offsets[0] = -N-1;
+	offsets[1] = -1;
+	offsets[2] = -N;
+	offsets[3] = 0;
+	offsets[4] = -N+1;
+	offsets[5] = 1;
+
+	int match_cnt = 0;
+	for(int i=0; i<left_cnt; ++i) {
+		for(int j=0; j<left_cnt; ++j) {
+			visited[j] = 0;
+		}
+		match_cnt += try_match(i);
+	}
+
+	printf("%d\n", dot_cnt - match_cnt);
 }
 
 int main(void)
 {
-	int T;
-	// fp = fopen("input.txt", "r");
-	scanf("%d", &T);
-	for(int i=0; i<T; ++i){
-		run();
+	int C;
+	scanf("%d", &C);
+	for(int i=0; i<C; ++i) {
+		do_task();
 	}
-	// fclose(fp);
-	return 0;
 }
