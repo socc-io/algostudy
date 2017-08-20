@@ -1,59 +1,18 @@
-#include <stdio.h>
-
-using namespace std;
-
-int abs(int val) {
-	return val < 0 ? (-1)*val : val;
-}
-
-int max(int a, int b)
+#include <cstdio>
+int main()
 {
-	return a < b ? b : a;
-}
-
-int getValue(int x, int y){
-	if(x == 0 && y == 0) return 1;
-	int ax = abs(x); int ay = abs(y);
-	int level = max(ax, ay);
-	int c1 = 1;
-	int c2;
-	int fdelta;
-	if(ax >= ay) {
-		fdelta = y * (x / ax);
-		if(x > 0) {
-			c2 = 8;
-		}
-		else {
-			c2 = 4;
+	int r1, c1, r2, c2, x, y, i, j, max_val = 1, max_len = 0, mat[50][5];
+	scanf("%d%d%d%d", &r1, &c1, &r2, &c2);
+	for(x=r1, i=0; x<=r2; ++x, ++i) {
+		for(y=c1, j=0; y<=c2; ++y, ++j) {
+			mat[i][j] = 1 + (y <= x ? (y >= -x ? 4*x*x + 3*x + y : 4*y*y - y + x) : (y >= -x ? 4*y*y - 3*y - x : 4*x*x + x - y));
+			if(max_val<mat[i][j]) max_val=mat[i][j];
 		}
 	}
-	else {
-		fdelta = x * (y / ay) * (-1);
-		if(y > 0) {
-			c2 = 2;
-		}
-		else {
-			c2 = 6;
-		}
+	for(;max_val;max_val/=10) ++max_len;
+	for(i=0; i<=r2-r1; ++i) {
+		for(j=0; j<=c2-c1; ++j) {
+			printf("%*d ",max_len,mat[i][j]);
+		} puts("");
 	}
-	for(int i=1; i<level; ++i) {
-		int c3 = c2*2 - c1 + 8;
-		c1 = c2;
-		c2 = c3;
-	} 
-	c2 += fdelta;
-	return c2;
-}
-
-int main(int argc, char** argv)
-{
-	int c1, r1, c2, r2;
-	scanf("%d %d %d %d", &c1, &r1, &c2, &r2);
-	for(int x=c1; x<=c2; ++x) {
-		for(int y=r1; y<=r2; ++y) {
-			printf("%3d ", getValue(x,y));
-		}
-		printf("\n");
-	}
-	return 0;
 }

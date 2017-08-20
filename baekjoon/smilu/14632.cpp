@@ -1,73 +1,151 @@
-#include <cstdio>
+#include <iostream>
 #include <cstring>
+#include <set>
+#include <algorithm>
 
-int N, M;
-int doj_num;
-int doj_height[500];
-int doj_width[500];
-char doj_pixel[500][500][500];
-int print_num;
-int print_type[10000];
-int print_x[10000];
-int print_y[10000];
+using namespace std;
 
-char paper[1000][1000];
-int paper_next[1000][1000];
+static char _buffer[819200];
+static int _currentChar = 0;
+static int _charsNumber = 0;
 
-int printed[1000];
-int printed_num=0;
+static inline char _read() {
+    if (_currentChar == _charsNumber) {
+        _charsNumber = (int)fread(_buffer, sizeof(_buffer[0]), sizeof(_buffer), stdin);
+        _currentChar = 0;
+    }
+    return _buffer[_currentChar++];
+}
+
+static inline int _readInt() {
+    int c, x, s;
+    c = _read();
+    while (c <= 32) c = _read();
+    x = 0;
+    while (c > 32) {
+        x *= 10;
+        x += c - '0';
+        c = _read();
+    }
+    return x;
+}
+
+class IntegerPairFirstComparator
+{
+public:
+	bool operator()(const pair<int, int> &a, const pair<int, int> &b)
+	{
+		return a.first < b.first;
+	}
+};
+
+typedef set< pair<int, int>, IntegerPairFirstComparator > GSet;
+
+int N, M, K, Q;
+
+int size[500][2];
+char doj[500][500][501]; // dojang
+
+int doj_type[10000];
+int doj_pos[10000][2];
+
+GSet G[1000];
+char paper[1000][1001];
 
 int main(void)
 {
-	scanf("%d%d%d", &N, &M, &doj_num);
-	for(int i=0; i<doj_num; ++i) {
-		scanf("%d%d", doj_height + i, doj_width + i);
-		for(int j=0; j<doj_height[i]; ++j) {
-			scanf("%s", doj_pixel[i][j]);
+	//
+	// get input
+	//
+
+	N = _readInt();
+	M = _readInt();
+	K = _readInt();
+
+	for(int i = 0; i < K; ++i) {
+		size[i][0] = _readInt();
+		size[i][1] = _readInt();
+
+		for(int j = 0; j < size[i][0]; ++j) {
+			char *c = doj[i][j];
+			while((*c++ = _read()) != '\n');
 		}
 	}
-	scanf("%d", &print_num);
 
-	memset(paper, '.', sizeof(paper));
-	memset(paper_next, -1, sizeof(paper_next));
-	for(int i=0; i<print_num; ++i) {
-		scanf("%d%d%d", print_type+i, print_x+i, print_y+i);
-		print_type[i]--;
+	Q = _readInt();
+
+	for(int i = 0; i < Q; ++i) {
+		doj_type[i] = _readInt() - 1;
+		doj_pos[i][0] = _readInt();
+		doj_pos[i][1] = _readInt();
 	}
-	for(int print_idx=print_num-1; print_idx >= 0; --print_idx) {
 
-		int type = print_type[print_idx];
-		int h = doj_height[type];
-		int w = doj_width[type];
-		int sx = print_x[print_idx];
-		int sy = print_y[print_idx];
-		char* pixel = (char*)doj_pixel[type];
-		int dx, dy, px, py, pdy;
+	//
+	// initialize some variables
+	//
 
-		for(dx=0; dx<h; ++dx) {
-			px = sx + dx;
-			printed_num = 0;
-			for(dy=0; dy<w;) {
-				py = sy + dy;
-				if(paper_next[px][py] == -1) {
-					paper[px][py] = pixel[dx * 500 + dy];
-					printed[printed_num++] = py;
-					++dy;
-				} else{
-					dy = paper_next[px][py] - sy;
+	for(int i = 0; i < N; ++i) {
+		memset(paper[i], '.', sizeof(char) * M);
+		G[i].insert({0, M});
+	}
+
+	//
+	// calculate
+	//
+
+	for(int q_idx = Q - 1; q_idx >= 0; --q_idx)
+	{
+		int type = doj_type[q_idx];
+		int sx = doj_pos[q_idx][0];
+		int sy = doj_pos[q_idx][1];
+		int ex = sx + size[type][0];
+		int ey = sy + size[type][1];
+
+		for(int x = sx; x < ex; ++x)
+		{
+			GSet *g = G + x;
+
+			GSet::iterator cur = g->lower_bound({sy, ey}), tmp;
+
+			if(cur != g->begin())
+			{
+				tmp = cur;
+				--cur;
+				if(cur->second <= sy) {
+					cur = tmp;
 				}
 			}
-			pdy = sy + dy;
-			while(pdy < M && paper_next[px][pdy] != -1) {
-				pdy = paper_next[px][pdy];
-			}
-			for(int i=0; i<printed_num; ++i) {
-				paper_next[px][printed[i]] = pdy;
+
+			while(cur != g->end() && cur->first < ey)
+			{
+				int cl = cur->first, cr = cur->second;
+				int l = max(cl, sy), r = min(cr, ey);
+
+				memcpy(&paper[x][l], &doj[type][x - sx][l - sy], r - l);
+
+				tmp = cur;
+				++cur;
+				g->erase(tmp);
+
+				if(cl < sy) {
+					g->insert({cl, sy});
+				}
+				if(ey < cr) {
+					g->insert({ey, cr});
+				}
 			}
 		}
 	}
-	for(int i=0; i<N; ++i) {
-		paper[i][M] = '\0';
-		printf("%s\n", paper[i]);
+
+	//
+	// print
+	//
+
+	for(int i = 0; i < N; ++i) {
+		puts(paper[i]);
 	}
+	puts("\n");
+	
+
+	return 0;
 }
