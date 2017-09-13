@@ -1,9 +1,12 @@
-#include <map>
+#include<vector>
+#include<algorithm>
+using namespace std;
 
-int main(void)
+int main()
 {
-	std::map<int, int> m;
-	printf("%d\n", m.find(1) == m.end());
-	printf("%d\n", m[1]);
-	printf("%d\n", m.find(1) == m.end());
+    vector<int> a = {1,2,2, 3, 3, 3, 4};
+    a.erase(unique(a.begin(), a.end()), a.end());
+    for(int i=0; i<a.size(); ++i) {
+        printf("%d ", a[i]);
+    }
 }
