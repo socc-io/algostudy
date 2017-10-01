@@ -56,7 +56,6 @@ int main()
 {
     int n=readInt(), l=readInt();
     int head=0, tail=0;
-    syscall(0x01, 1, "test\n", 5);
     for(int i=0; i<n; ++i) {
         int tmp = readInt();
         while(head != tail && a[head].second+l <= i) ++head;
@@ -64,7 +63,6 @@ int main()
         a[tail++] = {tmp, i};
         printInt(a[head].first);
     }
-    printf("%s", outbuf);
     flush();
     _Exit(0);
 }
