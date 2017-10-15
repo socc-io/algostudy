@@ -1,28 +1,25 @@
-#include<iostream>
-using namespace std;
+#include<cstdio>
+#include<algorithm>
 
-int w[1<<21];
-int s[1<<20];
-int n;
-int sw;
+#define MAXN (1<<21)
 
-void balance(int pos)
-{
-	if(pos >= (1 << n)) return;
-	int l = pos<<1, r = (pos<<1)+1;
-	balance(l); balance(r);
-	int ls = s[l] + w[l], rs = s[r] + w[r];
-	int Ms = ls > rs ? ls : rs;
-	int ms = ls < rs ? ls : rs;
-	s[pos] = Ms;
-	sw += Ms - ms;
+int w[MAXN], k, maxn, tmp;
+long long ans;
+
+inline void get(int &v) {
+	register int ch;
+	v = getchar_unlocked() & 15;
+	while((ch = getchar_unlocked()) > 40) v = v*10 + (ch & 15);
 }
 
 int main()
 {
-	scanf("%d", &n);
-	int wc = (((1<<n)-1)<<1) + 2;
-	for(int i=2; i<wc; ++i) scanf("%d", w+i), sw += w[i];
-	balance(1);
-	printf("%d", sw);
+	get(k);
+	maxn = (2 << k);
+	for(int i=2; i<maxn; ++i) get(w[i]);
+	for(int i=(maxn>>1); --i;) {
+		w[i] += tmp = std::max(w[i << 1], w[(i << 1) | 1]);
+		ans += tmp;
+	}
+	printf("%lld", ans + w[1]);
 }
