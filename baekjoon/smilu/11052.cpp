@@ -22,10 +22,10 @@ int profit(int x)
 
 int main(void)
 {
-	scanf("%d", &n);
+	scanf("%d", &n);df
 	for(int i=0; i<n; ++i) {
 		scanf("%d", p + i);
-	}
+	}c
 	printf("%d", profit(n));
 	return 0;
 }

@@ -15,12 +15,17 @@ using namespace std;
 
 int n;  // The number of worker
 int m;  // The number of work
+int k;  // The number of worker who can do 2 works.
 
 struct Edge;
 
 struct Node {
 	vector<Edge*> p_edges;
 	Edge* backedge;
+#ifdef DEBUG
+    char* name;
+    int idx;
+#endif
 };
 
 struct Edge {
@@ -35,6 +40,7 @@ struct Edge {
 };
 
 Node n_start;
+Node n_more;
 Node n_worker[MAX_WORKER];
 Node n_work[MAX_WORK];
 Node n_end;
@@ -55,6 +61,7 @@ void connect(Node* from, Node* to, int w)
 
 void clear_backedge() {
 	n_start.backedge = NULL;
+    n_more.backedge = NULL;
 	for(int i = 0; i < MAX_WORKER; i++) {
 		n_worker[i].backedge = NULL;
 	}
@@ -77,7 +84,7 @@ int findpath(Node* from, Node* to)
 		Node* u = q.front();
 		q.pop();
 #ifdef DEBUG
-		printf("popped: %p\n", u);
+		printf("popped: %s%d\n", u->name, u->idx);
 #endif
 		for(auto it = u->p_edges.begin(); it != u->p_edges.end(); it++) {
 			Edge* e = (*it);
@@ -85,10 +92,11 @@ int findpath(Node* from, Node* to)
 
 			if (e->w <= 0) continue;
 			if (v->backedge != NULL) continue;
+            if (v == from) continue;
 
 			v->backedge = e;
 #ifdef DEBUG
-			printf("set backedge %p -> %p\n", u, v);
+			printf("set backedge %s%d -> %s%d\n", u->name, u->idx, v->name, v->idx);
 #endif
 			if (v == to) {
 				found_end = 1;
@@ -106,7 +114,7 @@ int findpath(Node* from, Node* to)
 		printf("Found path in findpath\n");
 #endif
 		min_w = to->backedge->w;
-		for (Node* cur = to; cur != from; cur = cur->backedge->from) {
+		for (Node* cur = to; cur->backedge != NULL; cur = cur->backedge->from) {
 			if (cur->backedge->w < min_w) {
 				min_w = cur->backedge->w;
 			}
@@ -128,7 +136,22 @@ int main(void)
 	int min_w;
 	int sum_w = 0;
 
-	scanf("%d%d", &n, &m);
+#ifdef DEBUG
+    n_start.name = "start";
+    n_more.name = "more";
+    n_end.name = "end";
+    for(int i = 0; i < MAX_WORK; i++) {
+        n_work[i].name = "work";
+        n_work[i].idx = i + 1;
+    }
+    for(int i = 0; i < MAX_WORKER; i++) {
+        n_worker[i].name = "worker";
+        n_worker[i].idx = i + 1;
+    }
+#endif
+
+	scanf("%d%d%d", &n, &m, &k);
+    connect(&n_start, &n_more, k);
 	for(int i = 0; i < n; i++) {
 		scanf("%d", &work_num);
 		for(int j = 0; j < work_num; j++) {
@@ -136,7 +159,8 @@ int main(void)
 			work_idx--;
 			connect(n_worker + i, n_work + work_idx, 1);
 		}
-		connect(&n_start, n_worker + i, 2);
+		connect(&n_start, n_worker + i, 1);
+        connect(&n_more, n_worker + i, 1);
 	}
 	for(int i = 0; i < m; i++) {
 		connect(n_work + i, &n_end, 1);
@@ -147,7 +171,10 @@ int main(void)
 #ifdef DEBUG
 		printf("found min_w: %d\n", min_w);
 #endif
-		for(Node* cur = &n_end; cur != &n_start; cur = cur->backedge->from) {
+		for(Node* cur = &n_end; cur->backedge != NULL; cur = cur->backedge->from) {
+#ifdef DEBUG
+            printf("    %s%d\n", cur->name, cur->idx);
+#endif
 			cur->backedge->w -= min_w;
 			cur->backedge->op->w += min_w;
 		}
