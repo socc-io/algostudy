@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <queue>
+#include <stack>
 
 #define MAX_WORKER 1000
 #define MAX_WORK 1000
@@ -76,12 +77,12 @@ int findpath(Node* from, Node* to)
 	int found_end = 0;
 	int min_w;
 	Node* cur;
-	queue<Node*> q;
+	stack<Node*> q;
 	q.push(from);
 	clear_backedge();
 	
 	while(!q.empty()) {
-		Node* u = q.front();
+		Node* u = q.top();
 		q.pop();
 #ifdef DEBUG
 		printf("popped: %s%d\n", u->name, u->idx);
