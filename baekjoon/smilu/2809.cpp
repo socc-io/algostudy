@@ -1,69 +1,135 @@
-#include<iostream>
-#include<vector>
-#include<cstring>
-#include<algorithm>
+/*
+ * https://www.acmicpc.net/problem/2809
+ * author: smilu97
+ */
+#include <cstdio>
+#include <cstring>
+#include <queue>
+#include <map>
 using namespace std;
 
-int n, m;
+// #define DEBUG
+
+int N, M;
 char s[300001];
-bool a[300001];
-char t[5001];
+char a[300001];
+char p[5001];
 
-vector<int> sfx, g, ng, lev;
+struct Node {
+    map<int, Node*> children;
+    Node* failure;
+    int outputSize;
+    bool has(int key) {
+        return children.find(key) != children.end();
+    }
+    Node() {
+        failure = 0;
+        outputSize = 0;
+    }
+};
 
-bool compare(char* a, char* b) {
-    while(*a == *b && (*a != 0 || *b != 0)) ++a, ++b;;
-    return *a < *b;
+Node* root = new Node();
+int last_node = 1;
+
+int imax(int a, int b) {
+    return a < b ? b : a;
 }
-bool includes(char* a, char* b) {
-    while(*a == *b && (*a != 0 || *b != 0)) ++a, ++b;
-    return *b == 0;
-}
-int main()
+
+void build_links()
 {
-    scanf("%d%s%d", &n, s, &m);
-    sfx.resize(n), g.resize(n+1), ng.resize(n+1), lev.resize(n);
-    for(int i=0; i<n; ++i) g[i] = s[i], sfx[i] = i;
-    for(int t=1; t<n; t<<=1) {
-        vector<int> cnt(n, 0);
-        for(int i=0; i<n; ++i) ++cnt[g[max(i+t,n)]];
-        for(int i=1; i<n; ++i) cnt[i] += cnt[i-1];
-        for(int i=0; i<n; ++i) lev[--cnt[g[max(i+t,n)]]] = i;
-        cnt.clear(); cnt.resize(n, 0);
-        for(int i=0; i<n; ++i) ++cnt[g[i]];
-        for(int i=1; i<n; ++i) cnt[i] += cnt[i-1];
-        for(int i=0; i<n; ++i) sfx[--cnt[g[lev[i]]]] = lev[i];
-        auto cmp = [t](int a, int b) -> bool {
-            if(g[a] == g[b]) return g[a+t] < g[b+t];
-            else return g[a] < g[b];
-        };
-        ng[sfx[0]] = 1;
-        for(int i=1; i<n; ++i) {
-            ng[sfx[i]] = ng[sfx[i-1]] + (cmp(sfx[i-1], sfx[i]) ? 1 : 0);
-        }
-        g = ng;
-    }
-    printf("sfx tree complete\n");
-    vector<char*> sfs(n);
-    for(int i=0; i<n; ++i) sfs[i] = s + sfx[i];
-    for(int i=0; i<m; ++i) {
-        scanf("%s", t);
-        int tlen = strlen(t);
-        char* tile = t;
-        int cur = lower_bound(sfs.begin(), sfs.end(), tile, compare) - sfs.begin();
-        int pos = sfx[cur];
-        while(includes(sfs[cur], t)) {
-            for(int j=pos; j<pos+tlen; ++j) a[j] = true;
-            ++cur;
+    queue<Node*> q;
+    q.push(root);
+
+    while(!q.empty()) {
+        Node* u = q.front();
+        q.pop();
+
+        for (auto it = u->children.begin(); it != u->children.end(); ++it) {
+            int value = it->first;
+            Node* v = it->second;
+            Node* p = u;
+            while (p != root) {
+                if (p->failure->has(value)) {
+                    v->failure = p->failure->children[value];
+                    break;
+                }
+                p = p->failure;
+            }
+            if (p == root) {
+                v->failure = root;
+            }
+            v->outputSize = imax(v->outputSize, v->failure->outputSize);
+            q.push(v);
         }
     }
-    int ans = 0;
-    for(int i=0; i<n; ++i) {
-        if(!a[i]) ++ans;
-    }
-    printf("%d\n", ans);
 }
-            
 
-    
+int main(void)
+{
+    scanf("%d%s%d", &N, s, &M);
+    for (int i = 0; i < M; i++) {
+        scanf("%s", p);
+        int pl = strlen(p);
+        Node* cur = root;
+        char* pc = p;
+        while (1) {
+            int value = *pc - 'a';
+            if (!cur->has(value)) {
+                // if (last_node >= NUM_NODE) {
+                //     printf("Failed to allocate new node\n");
+                //     return 0;
+                // }
+                Node* newNode = new Node();
+                cur->children[value] = newNode;
+            }
+            cur = cur->children[value];
+            ++pc;
+            if (*pc == '\0') {
+                cur->outputSize = pl;
+                break;
+            }
+        }
+    }
+#ifdef DEBUG
+    printf("Completed to build graph\n");
+#endif
 
+    build_links();
+    root->failure = root;
+
+#ifdef DEBUG
+    for (int i = 0; i < last_node; i++) {
+        printf("Node %d:\n", i);
+        printf("children: ");
+        for (auto it = nodes[i].children.begin(); it != nodes[i].children.end(); ++it) {
+            printf("%d(%ld) ", it->second->value, it->second - nodes);
+        } puts("");
+        printf("failure: %ld\n", nodes[i].failure - nodes);
+        printf("outputSize: %d\n", nodes[i].outputSize);
+        printf("value: %d\n\n", nodes[i].value);
+    }
+#endif
+
+    Node* cur = root;
+    for (int i = 0; i < N; i++) {
+        int value = s[i] - 'a';
+        while (cur != root && !cur->has(value)) {
+            cur = cur->failure;
+        }
+        if (cur->has(value)) {
+            cur = cur->children[value];
+        }
+        for (int j = i; j > i - cur->outputSize && j >= 0; --j) {
+            a[j] = 1;
+        }
+    }
+
+    int res = 0;
+    for (int i = 0; i < N; i++) {
+        if (a[i] == 0) ++res;
+    }
+
+    printf("%d", res);
+
+    return 0;
+}

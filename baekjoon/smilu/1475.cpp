@@ -1,25 +1,28 @@
 #include <cstdio>
 
+char s[10];
+int cnt[10];
+
 int main(void)
 {
-	int n;
-	scanf("%d", &n);
+	scanf("%9s", s);
 
-	int count[10] = {0};
-	while(n) {
-		count[n % 10]++;
-		n /= 10;
+	for (char* ch = s; *ch != '\0'; ++ch) {
+		++cnt[*ch - '0'];
 	}
-	count[6] += count[9];
-	count[6] = (count[6] + 1) / 2;
-	count[9] = 0;
-
-	int max = -1;
-	for(int i=0; i<10; ++i) {
-		if(count[i] > max) {
-			max = count[i];
+	
+	int m = 0;
+	for (int i = 0; i < 10; i++) {
+		if (i == 6 || i == 9) continue;
+		if (cnt[i] > m) {
+			m = cnt[i];
 		}
 	}
 
-	printf("%d", max);
+	int n = (cnt[6] + cnt[9] + 1) / 2;
+	if (n > m) m = n;
+
+	printf("%d", m);
+
+	return 0;
 }
