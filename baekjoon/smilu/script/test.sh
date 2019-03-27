@@ -1,3 +1,3 @@
 #!/bin/sh
-g++ --std=c++14 -o $1 $1.cpp
+g++ $1.cpp -o $1 -g -O2 -Wall -lm -std=gnu++14
 cat input.txt | ./$1
