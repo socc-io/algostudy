@@ -1,126 +1,95 @@
+/*
+ * author: smilu97
+ * description:
+ * 	problem solving of https://www.acmicpc.net/problem/1017
+ */
 
 #include <cstdio>
-#include <cstdlib>
-
+#include <cstring>
 #include <algorithm>
-
-#define UNDEFINED -1
-#define LOCKED -2
-
+#include <vector>
 using namespace std;
 
-int n;
-int num[50];
-int mat[50][50];
-int conn[50];
-int visited[50];
-int prime[2001];
-int ans[50];
-int ans_num;
+int N, hN;
+vector<int> a, b, ans;
+vector<int> adj[25];
+bool visit[25];
+bool prime[2001];
+int a_match[25];
+int b_match[25];
 
-int make_connection(int idx)
+bool match(int ai)
 {
-	if (visited[idx] == 1) return UNDEFINED;
-	visited[idx] = 1;
-	for (int i = 1; i < n; i++) {
-		if (mat[idx][i]) continue;
-		if (conn[i] == UNDEFINED || make_connection(conn[i]) != UNDEFINED) {
-			conn[idx] = i;
-			conn[i] = idx;
-			return i;
+	if (visit[ai]) return 0;
+	visit[ai] = 1;
+	for (int bi: adj[ai]) {
+		if (b_match[bi] == -1 || match(b_match[bi])) {
+			a_match[ai] = bi;
+			b_match[bi] = ai;
+			return 1;
 		}
 	}
-	return UNDEFINED;
+	return 0;
 }
 
 int main(void)
 {
-	int fail, comp, aband;
-
-	// Get input
-	scanf("%d", &n);
-	for (int i = 0; i < n; i++) {
-		scanf("%d", num + i);
-	}
-
-	// printf("Numbers: ");
-	// for (int i = 0; i < n; i++) {
-	// 	printf("%d ", num[i]);
-	// } printf("\n");
-
-	// Get primes
-	for (int i = 2; i < 1001; i++) {
-		if (prime[i]) continue;
-		for (int j = i * i; j < 2001; j += i) {
-			prime[j] = 1;
+	for (int i = 2; i < 2001; i++) prime[i] = 1;
+	for (int i = 2; i < 50; i++) {
+		if (!prime[i]) continue;
+		for (int j = (i << 1); j < 2001; j += i) {
+			prime[j] = 0;
 		}
 	}
 
-	// Get graph
-	for (int i = 0; i < n; i++) {
-		mat[i][i] = 1;
-		for (int j = i + 1; j < n; j++) {
-			mat[i][j] = prime[num[i] + num[j]];
-			mat[j][i] = mat[i][j];
-		}
+	scanf("%d", &N);
+	hN = N >> 1;
+	bool odd_first;
+	for (int i = 0; i < N; i++) {
+		int tmp;
+		scanf("%d", &tmp);
+		if (i == 0) odd_first = tmp & 1;
+		((tmp & 1) ? a : b).push_back(tmp);
 	}
-	
-	// Initialize connection
-	for (int i = 0; i < n; i++) {
-		conn[i] = UNDEFINED;
-	}
-
-	// Get fully connected
-	fail = 0;
-	for (int i = 0; i < n; i++) {
-		if (conn[i] != UNDEFINED) continue;
-		for(int j = 0; j < n; j++) visited[j] = 0;
-		if (make_connection(i) == UNDEFINED) {
-			fail = 1;
-			break;
-		}
-	}
-	if (fail) {
-		printf("-1");
+	if (a.size() != b.size()) {
+		puts("-1");
 		return 0;
 	}
+	if (!odd_first) swap(a, b);
 
-	// Get answers
-	for (int i = 1; i < n; i++) {
-		if (mat[0][i]) continue;
-
-		if (conn[0] == i) {
-			ans[ans_num++] = num[i];
-			continue;
-		}
-
-		aband = conn[0];
-		comp = conn[i];
-
-		conn[aband] = UNDEFINED;
-		conn[comp] = UNDEFINED;
-		conn[0] = i;
-		conn[i] = 0;
-		
-		for (int j = 0; j < n; j++) {
-			visited[j] = 0;
-		}
-		visited[0] = 1;
-		visited[i] = 1;
-
-		if (make_connection(aband) == UNDEFINED) {
-			conn[0] = aband;
-			conn[aband] = 0;
-			conn[i] = comp;
-			conn[comp] = i;
-		} else {
-			ans[ans_num++] = num[i];
+	for (int i = 0; i < hN; i++) {
+		for (int j = 0; j < hN; j++) {
+			if (prime[a[i] + b[j]]) {
+				adj[i].push_back(j);
+			}
 		}
 	}
 
-	sort(ans, ans + ans_num);
-	for (int i = 0; i < ans_num; i++) {
-		printf("%d ", ans[i]);
+	for (int bi: adj[0]) {
+		memset(a_match, -1, sizeof(a_match));
+		memset(b_match, -1, sizeof(b_match));
+
+		a_match[0] = bi;
+		b_match[bi] = 0;
+
+		bool fail = 0;
+		for (int i = 1; i < hN; i++) {
+			memset(visit, 0, sizeof(visit));
+			visit[0] = 1;
+			if (!match(i)) {
+				fail = 1;
+				break;
+			}
+		}
+
+		if (!fail) ans.push_back(b[bi]);
+	}
+	if (ans.empty()) puts("-1");
+	else {
+		sort(ans.begin(), ans.end());
+		for(int r: ans) {
+			printf("%d ", r);
+		}
 	}
 
 	return 0;
