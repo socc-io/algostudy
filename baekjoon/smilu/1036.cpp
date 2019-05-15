@@ -6,95 +6,108 @@
 
 #include <cstdio>
 #include <cstring>
-#include <string>
-#include <algorithm>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-#define NSZ 70
+#define BI_SIZE 55
 
-int N, K;
-
-inline int convi(char c)
-{
-    return c <= 57 ? c - 48 : c - 55;
+inline char to_ch(char val) {
+    if (val < 10) return val + '0';
+    else return val + ('A' - 10);
 }
-inline char convc(int v)
-{
-    return v >= 10 ? v + 55 : v + 48;
+inline char to_in(char ch) {
+    if (ch <= '9') return ch - '0';
+    else return ch - ('A' - 10);
 }
 
-class numb
-{
-public:
-    char s[NSZ];
-    void input()
-    {
-        scanf("%s", s);
-        int len = strlen(s);
-        int mid = (len - 1) >> 1;
-        for (int i = 0, l = len - 1; i <= mid; i++, l--) {
-            char tmp = convi(s[i]);
-            s[i] = convi(s[l]);
-            s[l] = tmp;
+struct Bigint {
+    char data[BI_SIZE];
+    void clear() {
+        memset(data, 0, BI_SIZE);
+    }
+    int get_length() {
+        int i = BI_SIZE - 1;
+        while (data[i] == 0 && i >= 0) i--;
+        return i + 1;
+    }
+    void parse(char* str) {
+        int len = strlen(str);
+        for (int i = 0; i < len; i++) {
+            data[i] = to_in(str[len - 1 - i]);
         }
     }
-    int getlen() const {
-        int r = NSZ - 1;
-        while (!s[r] && r >= 0) r--; r++;
-        return r > 0 ? r : 1;
-    }
-    void print()
-    {
-        int len = getlen();
-        for (int i = len - 1; i >= 0; i--)
-            printf("%c", convc(s[i]));
-    }
-    void add(numb &b) {
-        int carry = 0;
-        for (int i = 0; i < NSZ; i++) {
-            int tmp = s[i] + b.s[i] + carry;
+    void add(Bigint & b) {
+        char carry = 0;
+        for (int i = 0; i < BI_SIZE; i++) {
+            char tmp = data[i] + b.data[i] + carry;
+            data[i] = tmp % 36;
             carry = tmp >= 36;
-            s[i] = tmp % 36;
         }
     }
-    bool operator<(const numb& b) const {
-        for (int i = NSZ - 1; i >= 0; i--)
-            if (s[i] != b.s[i]) return s[i] < b.s[i];
-        return false;
+    void add_pos(int pos, char num) {
+        char carry = num;
+        for (int i = pos; i < BI_SIZE; i++) {
+            char tmp = data[i] + carry;
+            data[i] = tmp % 36;
+            carry = tmp >= 36;
+        }
     }
+    void to_str(char* str) {
+        bool zero = true;
+        for (int i = get_length() - 1; i >= 0; i--) {
+            *str++ = to_ch(data[i]);
+            zero = false;
+        }
+        if (zero) *str++ = '0';
+        *str = '\0';
+    }
+    void print() {
+        char tmp[51];
+        to_str(tmp);
+        puts(tmp);
+    }
+    bool operator<(Bigint & b) const {
+        int i = BI_SIZE - 1;
+        while (data[i] == b.data[i] && i > 0) i--;
+        return data[i] < b.data[i];
+    }
+    Bigint() { clear(); }
 };
-
-numb sum;
-numb n[50];
-numb p[36];
-vector<int> comp;
 
 int main(void)
 {
+    int N, K;
+    vector<Bigint> arr(50);
+    vector<Bigint> pot(36);  // potential
+    
     scanf("%d", &N);
     for (int i = 0; i < N; i++) {
-        n[i].input();
-        sum.add(n[i]);
-    }
-    scanf("%d", &K);
-    for (int i = 0; i < N; i++) {
-        int len = n[i].getlen();
-        for (int j = 0; j < 36; j++) {
-            numb tmp;
-            for (int k = 0; k < NSZ; k++)
-                tmp.s[k] = k < len && n[i].s[k] == j
-                    ? 35 - j : 0;
-            p[j].add(tmp);
+        char tmp[51];
+        scanf("%s", tmp);
+        arr[i].parse(tmp);
+        int len = arr[i].get_length();
+        for (int j = 0; j < len; j++) {
+            char d = arr[i].data[j];
+            pot[d].add_pos(j, 35 - d);
         }
     }
-    comp.reserve(36);
-    for (int i = 0; i < 36; i++)
-        comp.push_back(i);
-    sort(comp.begin(), comp.end(), [](int a, int b) {
-        return p[b] < p[a];
+    scanf("%d", &K);
+
+    vector<int> ind(36);
+    for (int i = 0; i < 36; i++) ind[i] = i;
+    sort(ind.begin(), ind.end(), [&pot](int a, int b) {
+        return pot[a] < pot[b];
     });
-    for (int i = 0; i < K; i++)
-        sum.add(p[comp[i]]);
+
+    Bigint sum;
+    for (int i = 0; i < N; i++) {
+        sum.add(arr[i]);
+    }
+    for (int i = 0; i < K; i++) {
+        sum.add(pot[ind[35 - i]]);
+    }
     sum.print();
+
+    return 0;
 }

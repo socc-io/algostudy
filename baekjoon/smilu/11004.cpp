@@ -1,36 +1,35 @@
-#include<iostream>
+/*
+ * author: smilu97
+ * description:
+ *   algorithm solving: https://www.acmicpc.net/problem/11004
+ */
+
+#include <cstdio>
+#include <vector>
+#include <algorithm>
 using namespace std;
-
-int arr[5000000];
-
-void aswap(int a, int b)
+ 
+int find_kth(vector<int> & arr, int K)
 {
-    int tmp = arr[a];
-    arr[a] = arr[b];
-    arr[b] = tmp;
+    nth_element(
+        arr.begin(),
+        arr.begin() + (K - 1),
+        arr.end()
+    );
+    return arr[K - 1];
 }
 
-int findk(int start, int end, int k)
+int main(void)
 {
-    // printf("start: %d, end: %d\n", start, end);
-    int idx=start;
-    for(int i=start; i<end-1; ++i) {
-        if(arr[i] <= arr[end-1]) {
-            aswap(i, idx++);
-        }
+    int N, K;
+
+    scanf("%d%d", &N, &K);
+    vector<int> arr(N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &arr[i]);
     }
-    aswap(idx, end-1);
-    int lcnt = idx-start+1;
-    if(k == lcnt) return arr[idx];
-    if(k < lcnt) return findk(start, idx, k);
-    return findk(idx+1, end, k-lcnt);
-}
-int main()
-{
-    int n, k;
-    scanf("%d%d", &n, &k);
-    for(int i=0; i<n; ++i) {
-        scanf("%d", arr+i);
-    }
-    printf("%d", findk(0, n, k));
+
+    printf("%d", find_kth(arr, K));
+
+    return 0;
 }
