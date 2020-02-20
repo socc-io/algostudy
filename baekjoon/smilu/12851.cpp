@@ -6,48 +6,38 @@
 
 #include <cstdio>
 #include <queue>
+#include <vector>
 using namespace std;
 
-#define MAX 200000  // log2(MAX) ~= 16.xx
-#define INF 10000000
-
-int N, K;
-int c[MAX + 1];
-int d[MAX + 1];
+#define INF 0x7FFFFFF0
+#define MAX 100000
 
 int main(void)
 {
-    scanf("%d%d", &N, &K);
-
-    c[N] = 1;
+    int n, k;
+    scanf("%d%d", &n, &k);
     queue<int> q;
-    q.push(N);
+    vector<int> c(MAX+1, INF); // costs
+    vector<int> pc(MAX+1, 0); // path count
+    q.push(n);
+    c[n] = 0;
+    pc[n] = 1;
     while(!q.empty()) {
         int u = q.front();
         q.pop();
-
-        // printf("debug: visit %d(c: %d, d:, %d)\n", u, c[u], d[u]);
-
-        auto visit = [&](int v) {
-            if (v >= K * 2 || v > MAX) return;
-            if (v < 0) return;
-            if (c[v] == 0) {
+        int vs[3] = {u << 1, u + 1, u - 1};
+        int nc = c[u] + 1; // next cost
+        for (int i = 0; i < 3; i++) {
+            int v = vs[i];
+            if (v > MAX) continue;
+            if (nc < c[v]) {
+                c[v] = nc;
                 q.push(v);
-                d[v] = d[u] + 1;
-                c[v] = c[u];
-            } else {
-                if (d[v] == d[u] + 1) {
-                    c[v] += c[u];
-                }
+                pc[v] = pc[u];
+            } else if (nc == c[v]) {
+                pc[v] += pc[u];
             }
-        };
-
-        visit(u - 1);
-        visit(u + 1);
-        visit(u << 1);
+        }
     }
-
-    printf("%d\n%d\n", d[K], c[K]);
-
-    return 0;
+    printf("%d\n%d", c[k], pc[k]);
 }

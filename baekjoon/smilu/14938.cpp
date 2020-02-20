@@ -32,7 +32,6 @@ int main(void) {
 
 	int max_a = 0;
 	for(int i=0; i<n; ++i) {
-		int now_a = 0;
 		priority_queue<pii, vector<pii>, greater<pii>> Q;
 		vector<int> dist(n, INF);
 		vector<bool> visit(n, false);
@@ -44,7 +43,6 @@ int main(void) {
 			Q.pop();
 			if(visit[now]) continue;
 			visit[now] = true;
-			now_a += a[now];
 			for(int next=0; next<n; ++next) {
 				if(c[now][next] >= INF) continue;
 				int next_cost = now_cost + c[now][next];
@@ -54,7 +52,11 @@ int main(void) {
 				}
 			}
 		}
-		if(max_a < now_a) max_a = now_a;
+		int now_a = 0;
+		for (int i = 0; i < n; i++) {
+			if (dist[i] <= m) now_a += a[i];
+		}
+		if (now_a > max_a) max_a = now_a;
 	}
 
 	printf("%d", max_a);

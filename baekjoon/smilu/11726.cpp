@@ -5,7 +5,7 @@
 int rs[1001];
 
 void inspect(int n) {
-  rs[n] = (2 * rs[n - 2] + rs[n - 1]) % MOD;
+  rs[n] = (rs[n - 2] + rs[n - 1]) % MOD;
 }
 
 int main(void)
@@ -15,7 +15,7 @@ int main(void)
 
   rs[0] = 0;
   rs[1] = 1;
-  rs[2] = 3;
+  rs[2] = 2;
 
   for (int i = 3; i <= n; i++) inspect(i);
 
