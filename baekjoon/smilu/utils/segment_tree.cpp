@@ -1,13 +1,7 @@
-#include <cstdio>
-#include <vector>
-using namespace std;
-
-// #define LOG_DFS
-
 typedef long long lld;
 
 class SegmentTree {
-  lld value[300020];
+  lld value[300020]; // over 2*2^{log2(x)} - 1
   lld lazy [300020];
   void _update_lazy(int n_begin, int n_end, int index) {
     if (lazy[index] == 0) return;
@@ -67,45 +61,3 @@ public:
     return _get_range(begin, end, 0, size, 1);
   }
 };
-
-int n, m;
-vector<int> children[100001];
-int begins[100001];
-int ends  [100001];
-
-SegmentTree tree;
-
-int assign_number(int index, int number) {
-  begins[index] = number;
-  int last = number + 1;
-  for (int child: children[index]) {
-    last = assign_number(child, last);
-  }
-  ends[index] = last;
-  return last;
-}
-
-int main(void)
-{
-  scanf("%d%d", &n, &m);
-  for (int i = 1; i <= n; i++) {
-    int parent;
-    scanf("%d", &parent);
-    if (parent != -1) {
-      children[parent].push_back(i);
-    }
-  }
-  int last = assign_number(1, 1);
-  tree.size = last + 1;
-  for (int i = 0; i < m; i++) {
-    int command, index;
-    scanf("%d%d", &command, &index);
-    if (command == 1) {
-      lld weight;
-      scanf("%lld", &weight);
-      tree.add_range(begins[index], ends[index], weight);
-    } else {
-      printf("%lld\n", tree.get_range(begins[index], begins[index] + 1));
-    }
-  }
-}

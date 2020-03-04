@@ -1,13 +1,12 @@
 #include <cstdio>
 #include <vector>
+#include <algorithm>
 using namespace std;
-
-// #define LOG_DFS
 
 typedef long long lld;
 
 class SegmentTree {
-  lld value[300020];
+  lld value[300020]; // over 2*2^{log2(x)} - 1
   lld lazy [300020];
   void _update_lazy(int n_begin, int n_end, int index) {
     if (lazy[index] == 0) return;
@@ -54,12 +53,17 @@ class SegmentTree {
   }
 public:
   int size = 100001;
+  void set(int index, lld v) {
+    lld diff = v - get(index);
+    add_range(index, index + 1, diff);
+  }
   void add_range(int begin, int end, lld v) {
     #ifdef LOG_DFS
       printf("add(%d, %d, %d)\n", begin, end, v);
     #endif
     _add_range(begin, end, v, 0, size, 1);
   }
+  lld get(int index) { return get_range(index, index + 1); }
   lld get_range(int begin, int end) {
     #ifdef LOG_DFS
       printf("get(%d, %d)\n", begin, end);
@@ -67,45 +71,58 @@ public:
     return _get_range(begin, end, 0, size, 1);
   }
 };
-
-int n, m;
-vector<int> children[100001];
-int begins[100001];
-int ends  [100001];
-
 SegmentTree tree;
 
-int assign_number(int index, int number) {
-  begins[index] = number;
-  int last = number + 1;
-  for (int child: children[index]) {
-    last = assign_number(child, last);
+struct Query {
+  int k, begin, end, index;
+  lld ans;
+  Query(int b, int c, int d, int _index) {
+    k = b; begin = c; end = d; index = _index;
+    ans = 0;
   }
-  ends[index] = last;
-  return last;
+};
+
+int n, m;
+vector<pair<int,int>> updates;
+vector<Query*> queries;
+
+bool by_k(const Query* a, const Query* b) {
+  return a->k < b->k;
+}
+bool by_index(const Query* a, const Query* b) {
+  return a->index < b->index;
 }
 
 int main(void)
 {
-  scanf("%d%d", &n, &m);
+  scanf("%d", &n);
   for (int i = 1; i <= n; i++) {
-    int parent;
-    scanf("%d", &parent);
-    if (parent != -1) {
-      children[parent].push_back(i);
+    int tmp; scanf("%d", &tmp);
+    tree.add_range(i, i + 1, tmp);
+  }
+  scanf("%d", &m);
+  for (int i = 0; i < m; i++) {
+    int a, b, c, d;
+    scanf("%d%d%d", &a, &b, &c);
+    if (a == 1) {
+      updates.push_back({b, c});
+    } else {
+      scanf("%d", &d);
+      queries.push_back(new Query(b, c, d+1, i));
     }
   }
-  int last = assign_number(1, 1);
-  tree.size = last + 1;
-  for (int i = 0; i < m; i++) {
-    int command, index;
-    scanf("%d%d", &command, &index);
-    if (command == 1) {
-      lld weight;
-      scanf("%lld", &weight);
-      tree.add_range(begins[index], ends[index], weight);
-    } else {
-      printf("%lld\n", tree.get_range(begins[index], begins[index] + 1));
+  sort(queries.begin(), queries.end(), by_k);
+
+  int up = 0;
+  for (auto query: queries) {
+    while (up < query->k) {
+      tree.set(updates[up].first, updates[up].second);
+      up++;
     }
+    query->ans = tree.get_range(query->begin, query->end);
+  }
+  sort(queries.begin(), queries.end(), by_index);
+  for (auto query: queries) {
+    printf("%lld\n", query->ans);
   }
 }
