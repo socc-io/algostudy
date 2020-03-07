@@ -5,7 +5,7 @@ using namespace std;
 typedef long long lld;
 
 class SegmentTree {
-  lld value[600020]; // over 2*2^{log2(x)} - 1
+  lld value[600020]; // over 2*2^{ceil(log2(x))} - 1
   lld lazy [600020];
   void _update_lazy(int n_begin, int n_end, int index) {
     if (lazy[index] == 0) return;
