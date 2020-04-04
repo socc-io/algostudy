@@ -85,6 +85,7 @@ struct Graph {
 	}
 
 	pair<int,int> mcmf(int src, int dst) {
+    // return: {max_flow, min_cost}
 		pair<int,int> res;
 		while (1) {
 			vector<int> route = spfa(src, dst);
@@ -98,31 +99,31 @@ struct Graph {
 	}
 };
 
-int n, m;
-int source, left, right, sink;
-Graph g(NUM_NODE);
+// int n, m;
+// int source, left, right, sink;
+// Graph g(NUM_NODE);
 
-int main(void)
-{
-	scanf("%d%d", &n, &m);
-	source = 0;
-	left = source + 1;
-	right = left + n;
-	sink = right + m;
-	for (int i = 0; i < n; i++) {
-		int t; scanf("%d", &t);
-		g.add_edge(source, left + i, t, 0);
-	}
-	for (int i = 0; i < m; i++) {
-		int t; scanf("%d", &t);
-		g.add_edge(right + i, sink, t, 0);
-	}
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < n; j++) {
-			int t; scanf("%d", &t);
-			g.add_edge(left + j, right + i, INF, t);
-		}
-	}
-	int mc = g.mcmf(source, sink).second;
-	printf("%d\n", mc);
-}
+// int main(void)
+// {
+// 	scanf("%d%d", &n, &m);
+// 	source = 0;
+// 	left = source + 1;
+// 	right = left + n;
+// 	sink = right + m;
+// 	for (int i = 0; i < n; i++) {
+// 		int t; scanf("%d", &t);
+// 		g.add_edge(source, left + i, t, 0);
+// 	}
+// 	for (int i = 0; i < m; i++) {
+// 		int t; scanf("%d", &t);
+// 		g.add_edge(right + i, sink, t, 0);
+// 	}
+// 	for (int i = 0; i < m; i++) {
+// 		for (int j = 0; j < n; j++) {
+// 			int t; scanf("%d", &t);
+// 			g.add_edge(left + j, right + i, INF, t);
+// 		}
+// 	}
+// 	int mc = g.mcmf(source, sink).second;
+// 	printf("%d\n", mc);
+// }
