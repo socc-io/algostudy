@@ -1,36 +1,39 @@
 #include <cstdio>
-#include <set>
 #include <algorithm>
+using namespace std;
 
-int N, tmp, arr[500000], sum, cnt[8001], min = 4001, max = -4001, c;
+typedef long long lld;
+
+int n;
+lld a[500000];
+int cnt[8010];
+
+int freqs[8000];
+int freqs_idx;
 
 int main(void)
 {
-	std::set<int> S;
-
-	scanf("%d", &N);
-	for(int i = 0; i < N; ++i) {
-		scanf("%d", &tmp);
-		arr[i] = tmp;
-		sum += tmp;
-		if(tmp < min) min = tmp;
-		if(tmp > max) max = tmp;
-		cnt[tmp + 4000]++;
-	}
-	std::sort(arr, arr+N);
-
-	for(int i = 1; i <= 8000; ++i) {
-		if(c < cnt[i]) {
-			c = cnt[i];
-			S.clear();
-			S.insert(i - 4000);
-		} else if(c == cnt[i]) {
-			S.insert(i - 4000);
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) scanf("%lld", &a[i]);
+	sort(a, a+n);
+	lld sum = 0;
+	int freq = -1;
+	for (int i = 0; i < n; i++) sum += a[i];
+	for (int i = 0; i < n; i++) cnt[a[i]+4000]++;
+	for (int i = 0; i < 8010; i++) {
+		if (cnt[i] > freq) {
+			freqs[0] = i - 4000;
+			freqs_idx = 1;
+			freq = cnt[i];
+		} else if (cnt[i] == freq) {
+			freqs[freqs_idx++] = i - 4000;
 		}
 	}
-
-	auto it = S.begin();
-	if(S.size() > 1 ) ++it;
-
-	printf("%.0f\n%d\n%d\n%d", ((double)sum) / N, arr[N/2], *it, max - min);
+	lld avg = (sum + (n/2)) / n;
+	if (sum < 0) avg = -((-sum + (n/2))/n);
+	sort(freqs, freqs + freqs_idx);
+	printf("%lld\n", avg);
+	printf("%lld\n", a[n/2]);
+	printf("%d\n", freqs_idx > 1 ? freqs[1] : freqs[0]);
+	printf("%lld\n", a[n-1]-a[0]);
 }
