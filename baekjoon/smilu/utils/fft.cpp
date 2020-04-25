@@ -11,50 +11,8 @@ typedef valarray<cpx> c_array;
 
 const double pi = acos(-1);
 
-/*
-input : f => Coefficient, w => principal n-th root of unity
-output : f => f(x_0), f(x_1), f(x_2), ... , f(x_n-1)
-T(N) = 2T(N/2) + O(N)
-*/
-void FFT(vec &f, cpx w){
-	int n = f.size();
-	if(n == 1) return; //base case
-	vec even(n >> 1), odd(n >> 1);
-	for(int i=0; i<n; i++){
-		if(i & 1) odd[i >> 1] = f[i];
-		else even[i >> 1] = f[i];
-	}
-	FFT(even, w*w); FFT(odd, w*w);
-	cpx wp(1, 0);
-	for(int i=0; i<n/2; i++){
-		f[i] = even[i] + wp * odd[i];
-		f[i+n/2] = even[i] - wp * odd[i];
-		wp *= w;
-	}
-}
-
-/*
-input : a => A's Coefficient, b => B's Coefficient
-output : A * B
-*/
-vec mul(vec a, vec b){
-	int n = 1;
-	while(n <= a.size() || n <= b.size()) n <<= 1;
-	n <<= 1;
-	a.resize(n); b.resize(n); vec c(n);
-	cpx w(cos(2*pi/n), sin(2*pi/n));
-	FFT(a, w); FFT(b, w);
-	for(int i=0; i<n; i++) c[i] = a[i] * b[i];
-	FFT(c, cpx(1, 0) / w);
-	for(int i=0; i<n; i++){
-		c[i] /= cpx(n, 0);
-		c[i] = cpx(round(c[i].real()), round(c[i].imag())); //result is integer
-	}
-	return c;
-}
-
 // f.size()가 2의 승수여야 함
-void fft(c_array &f, bool inv = false){
+void fft(vec &f, bool inv = false){
     int n = f.size();
     for(int i = 1, j = 0; i < n; ++i){
         int b = n/2;
@@ -78,4 +36,22 @@ void fft(c_array &f, bool inv = false){
         for(int i = 0; i < n; ++i)
             f[i] /= n;
     }
+}
+
+void fit_resize(vec &p, vec &q) {
+  int n = 1;
+	while (n <= p.size() || n <= q.size()) n <<= 1;
+	n <<= 1;
+  p.resize(n);
+	q.resize(n);
+}
+
+vec mul(vec &p, vec &q){
+  fit_resize(p, q);
+  int n = p.size();
+	vec c(n);
+	fft(p); fft(q);
+	for (int i = 0; i < n; i++) c[i] = p[i] * q[i];
+	fft(c, 1);
+	return c;
 }
