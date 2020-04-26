@@ -7,7 +7,6 @@ using namespace std;
 #define INF 0x7FFFFFFF
 
 vector<pair<int,int>> adj[100001];
-bool party[100001];
 int n, m, k, q;
 int d[100001], di[100001];
 int l[100001], r[100001], res[100001];
@@ -27,10 +26,6 @@ struct UnionFind {
     p[a] = b;
     return true;
   }
-  bool like(int a, int b) { return get(a) == get(b); }
-  UnionFind() {
-    clear();
-  }
 } uf;
 
 bool compare_d(int a, int b) { return d[a] > d[b]; }
@@ -43,21 +38,11 @@ struct Query {
   }
 } qs[100001];
 
-struct Edge {
-  int u, v, w;
-  void input() {
-    scanf("%d%d%d", &u, &v, &w);
-    --u; --v;
-    adj[u].push_back({v, w});
-    adj[v].push_back({u, w});
-  }
-} edges[200001];
-
 void dijkstra() {
-  for (int i = 0; i < n; i++) d[i] = party[i] ? 0 : INF;
+  for (int i = 0; i < n; i++) d[i] = d[i] ? 0 : INF;
   priority_queue<pair<int,int>> q;
   vector<bool> visit(n, false);
-  for (int i = 0; i < n; i++) if (party[i]) {
+  for (int i = 0; i < n; i++) if (!d[i]) {
     q.push({0, i});
   }
   while (!q.empty()) {
@@ -80,10 +65,15 @@ void dijkstra() {
 int main(void)
 {
   scanf("%d%d%d%d", &n, &m, &k, &q);
-  for (int i = 0; i < m; i++) edges[i].input();
+  for (int i = 0; i < m; i++) {
+    int u, v, w; scanf("%d%d%d", &u, &v, &w);
+    --u; --v;
+    adj[u].push_back({v, w});
+    adj[v].push_back({u, w});
+  }
   for (int i = 0; i < k; i++) {
     int tmp; scanf("%d", &tmp);
-    party[tmp-1] = true;
+    d[tmp-1] = 1;
   }
   for (int i = 0; i < q; i++) qs[i].input();
   for (int i = 0; i < q; i++) l[i] = 0, r[i] = n;
