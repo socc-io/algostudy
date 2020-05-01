@@ -4,3 +4,5 @@ ipch/
 *.in*
 *.out*
 out
+tmp
+tmp.cpp
