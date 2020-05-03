@@ -40,7 +40,6 @@ struct LineContainer : multiset<Line, less<>> {
 			isect(x, erase(y));
 	}
 	ll query(ll x) {
-		assert(!empty());
 		auto l = *lower_bound(x);
 		return l.k * x + l.m;
 	}
