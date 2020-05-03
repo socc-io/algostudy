@@ -7,3 +7,4 @@ out
 tmp
 tmp.cpp
 graph
+[0-9]*
