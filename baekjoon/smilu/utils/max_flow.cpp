@@ -1,85 +1,78 @@
 #include <cstdio>
+#include <cmath>
+#include <cassert>
 #include <vector>
+#include <queue>
+#include <algorithm>
 using namespace std;
 
-#define INF 0x7FFFFFFF
+typedef long long ll;
 
-struct Node {
-  struct Edge {
-    Node *v;
-    int c, r; // destination, capacity, reverse_index
-    Edge(Node *v, int c, int r): v(v), c(c), r(r) {}
-  };
-  vector<Edge> edges;
-
-  void add_edge(Node *v, int c) {
-    edges.emplace_back(v, c, v->edges.size());
-    v->edges.emplace_back(this, 0, edges.size() - 1);
-  }
-
-  bool dfs_lock;
-  int dfs(Node* target, int mf) {
-    if (this == target) return mf;
-    
-    if (dfs_lock) return 0;
-    dfs_lock = true;
-
-    for (Edge &e: edges) {
-      if (e.c <= 0) continue;
-      int f = e.v->dfs(target, min(e.c, mf));
-      if (f <= 0) continue;
-      e.c -= f;
-      e.v->edges[e.r].c += f;
-
-      dfs_lock = false;
-      return f;
-    }
-
-    dfs_lock = false;
-    return 0;
-  }
-};
-
-// #define NUM_LEFTS 200
-// #define NUM_RIGHTS 100
-// // source, sink, person[], food[]
-// #define NUM_NODE (2 + NUM_LEFTS + NUM_RIGHTS)
-// #define SOURCE 0
-// #define SINK   1
-// #define LEFTS  2
-// #define RIGHTS (2 + NUM_LEFTS)
-
-// Node nodes[NUM_NODE];
-// Node* lefts = nodes + LEFTS;
-// Node* rights = nodes + RIGHTS;
-// Node* source = nodes + SOURCE;
-// Node* sink = nodes + SINK;
-
-// int n, k, d;
-
-// int main(void)
-// {
-//   scanf("%d%d%d", &n, &k, &d);
-//   for (int i = 0; i < n; i++) {
-//     source->add_edge(&lefts[i], k);
-//   }
-//   for (int i = 0; i < d; i++) {
-//     int c; scanf("%d", &c);
-//     rights[i].add_edge(sink, c);
-//   }
-//   for (int i = 0; i < n; i++) {
-//     int z; scanf("%d", &z);
-//     for (int j = 0; j < z; j++) {
-//       int f; scanf("%d", &f); --f;
-//       lefts[i].add_edge(&rights[f], 1);
-//     }
-//   }
-
-//   int ans = 0;
-//   while(1) {
-//     int f = source->dfs(sink, INF);
-//     if (f == 0) break;
-//     ans += f;
-//   }
-//   printf("%d\n", ans);
-// }
+const int MAXN = 222;
+struct maxflow{
+	struct edg{int pos, cap, rev, idx;};
+	vector<edg> gph[MAXN];
+ 
+	void clear(){
+		for(int i=0; i<MAXN; i++){
+			gph[i].clear();
+		}
+	}
+ 
+	void add_edge(int s, int e, int x){
+		gph[s].push_back({e, x, (int)gph[e].size(), -1});
+		gph[e].push_back({s, 0, (int)gph[s].size()-1, -1});
+	}
+ 
+	void add_edge(int s, int e, int x, int idx){
+		gph[s].push_back({e, x, (int)gph[e].size(), idx});
+		gph[e].push_back({s, 0, (int)gph[s].size()-1, -1});
+	}
+ 
+	int dis[MAXN], pnt[MAXN];
+ 
+	bool bfs(int src, int sink){
+		memset(dis, 0, sizeof(dis));
+		memset(pnt, 0, sizeof(pnt));
+		queue<int> que;
+		que.push(src);
+		dis[src] = 1;
+		while(!que.empty()){
+			int x = que.front();
+			que.pop();
+			for(int i=0; i<gph[x].size(); i++){
+				edg e = gph[x][i];
+				if(e.cap > 0 && !dis[e.pos]){
+					dis[e.pos] = dis[x] + 1;
+					que.push(e.pos);
+				}
+			}
+		}
+		return dis[sink] > 0;
+	}
+ 
+	int dfs(int x, int sink, int f){
+		if(x == sink) return f;
+		for(; pnt[x] < gph[x].size(); pnt[x]++){
+			edg e = gph[x][pnt[x]];
+			if(e.cap > 0 && dis[e.pos] == dis[x] + 1){
+				int w = dfs(e.pos, sink, min(f, e.cap));
+				if(w){
+					gph[x][pnt[x]].cap -= w;
+					gph[e.pos][e.rev].cap += w;
+					return w;
+				}
+			}
+		}
+		return 0;
+	}
+ 
+	ll match(int src, int sink){
+		ll ret = 0;
+		while(bfs(src, sink)){
+			int r;
+			while((r = dfs(src, sink, 2e9))) ret += r;
+		}
+		return ret;
+	}
+} mf;
