@@ -135,9 +135,10 @@ class Machine {
     }
     facts.push_back(Fact(fi, sn, neg, vn, on));
     by_subj.insert({sn, fi});
-    by_verb.insert({vn, fi});
     if (on != -1) {
       by_verb_obj.insert({{vn, on}, fi});
+    } else {
+      by_verb.insert({vn, fi});
     }
     by_all.insert({{sn, vn, on}, fi});
   }
