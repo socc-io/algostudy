@@ -1,41 +1,45 @@
-#include <iostream>
-#include <vector>
-using namespace std; 
+#include <cstdio>
 
-#define K_MAX 1000000000
-#define PRIME_MAX 40559
+typedef long long ll;
 
-bool prime[PRIME_MAX+1];
-bool dp[K_MAX+1];
+const int MAX = 100010;
+
+int mob[MAX];
+
+ll f(ll x) {
+  ll ret = 0;
+  for (int i = 1; i*i <= x; i++)
+    ret += mob[i] * (x/(i*i));
+  return ret;
+}
+
+void set_mob() {
+  for (int i = 0; i < MAX; i++) mob[i] = 1;
+  for (int i = 2; i*i < MAX; i++) {
+    if (mob[i] != 1) continue;
+    for (int j = i; j < MAX; j += i) mob[j] *= -i;
+    for (int j = i*i; j < MAX; j += i*i) mob[j] = 0;
+  }
+  for (int i = 2; i < MAX; i++) {
+         if (mob[i] ==  i) mob[i] =  1;
+    else if (mob[i] == -i) mob[i] = -1;
+    else if (mob[i] <   0) mob[i] =  1;
+    else if (mob[i] >   0) mob[i] = -1;
+  }
+}
 
 int main(void)
 {
-    int K;
-    scanf("%d", &K);
+  ll k; scanf("%lld", &k);
+  set_mob();
 
-    // calc primes
-    puts("calc primes started");
-    prime[0] = true, prime[1] = true;
-    int prime_cnt = 0;
-    for(int i=2; i<=PRIME_MAX; ++i) {
-        if(prime[i]) continue;
-        ++prime_cnt;
-        for(int j=i<<1; j<=PRIME_MAX;  j+=i) {
-            prime[j] = true;
-        }
-        int m = i*i;
-        for(int j=m; j<=K_MAX; j+=m) {
-            dp[j] = true;
-        }
-    }
-    printf("calc primes complete: %d\n", prime_cnt);
-    int cnt = 0;
-    for(int i=1; i<=K_MAX; ++i) {
-        if(dp[i] == false) ++cnt;
-        if(cnt >= K) {
-            printf("%d\n", i);
-            break;
-        }
-    }
-    puts("complete");
+  ll s = 1, e = 2000000000;
+  while (s < e) {
+    ll m = (s+e)>>1;
+    ll v = f(m);
+    if (v > k) e = m-1;
+    else if (v < k) s = m+1;
+    else e = m;
+  }
+  printf("%lld\n", s);
 }
