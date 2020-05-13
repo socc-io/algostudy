@@ -2,27 +2,36 @@
 #include <vector>
 using namespace std;
 
+int fastscan() 
+{ 
+    bool negative = false; 
+    int c; 
+    int number = 0; 
+    c = getchar(); 
+    if (c=='-') 
+    { 
+        negative = true; 
+        c = getchar(); 
+    } 
+    for (; (c>47 && c<58); c=getchar()) 
+        number = number *10 + c - 48; 
+    if (negative) 
+        number *= -1; 
+    return number;
+} 
+
 const int MAX_N = 50001;
 
 int n;
 vector<int> adj[MAX_N];
 
-int check(int v, int i) {
-  return (v & (1 << i));
-}
-
 int biggest_bit(int v) {
-  for (int i = 30; i >= 0; i--) {
-    if (check(v, i)) return i;
+  int ret = -1;
+  while (v) {
+    ++ret;
+    v >>= 1;
   }
-  return -1;
-}
-
-int smallest_bit(int v) {
-  for (int i = 0; i >= 30; i++) {
-    if (check(v, i)) return i;
-  }
-  return 31;
+  return ret;
 }
 
 int compute(int u, int p) {
@@ -33,22 +42,20 @@ int compute(int u, int p) {
     r_two |= (r_or & sub);
     r_or |= sub;
   }
-  int a = biggest_bit(r_two);
-  int b = a+1; while (check(r_or, b)) b++;
-  int ret = 1<<b;
-  for (int i = b+1; i<31; i++) if (check(r_or, i)) ret |= (1<<i);
-  return ret;
+  int b = 1 << (biggest_bit(r_two) + 1);
+  while (r_or & b) b <<= 1;
+  return b | (r_or & (~((b<<1)-1)));
 }
 
 int main(void)
 {
-  scanf("%d", &n);
+  n = fastscan();;
   for (int i = 1; i < n; i++) {
-    int a, b; scanf("%d%d", &a, &b);
+    int a = fastscan(); 
+    int b = fastscan();
     adj[a].push_back(b);
     adj[b].push_back(a);
   }
   int ret = compute(1, 0);
-  // printf("ret: %d\n", ret);
   printf("%d\n", biggest_bit(ret));
 }
