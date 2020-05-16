@@ -145,6 +145,7 @@ int main()
 {
   scanf("%d%d%d", &n, &start, &d);
   for (int i = 1; i <= n; i++) scanf("%lld", &ps[i]);
+  ++start;
   ll origin = solve(n, start, d, ps);
   reverse(ps + 1, ps + n + 1);
   ll reversed = solve(n, n - start + 1, d, ps);
