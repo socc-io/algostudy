@@ -1,91 +1,60 @@
-/*
- * author: smilu97
- * description:
- *   algorithm solving: https://www.acmicpc.net/problem/11657
- */
-
-#include <cstdio>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define INF 0x6FFFFFFF
+typedef long long ll;
 
-struct Node {
-    struct Edge {
-        Node* node;
-        int cost;
-        Edge(Node* n, int c): node(n), cost(c) {}
-    };
-    int idx;
-    vector<Edge*> edges;
-    int d_cache;
-    int visit_cnt;
-    bool in_q;
+struct edge {
+  int v;
+  ll w;
+  edge() {}
+  edge(int v, ll w): v(v), w(w) {}
 };
 
-bool SPFA(vector<Node*> & nodes, Node* start)
-{
-    int N = nodes.size();
-    queue<Node*> q;
-    for (auto node: nodes) {
-        node->d_cache = INF;
-        node->visit_cnt = 0;
-        node->in_q = false;
-    }
+int n, m;
+vector<edge> adj[501];
+ll dist[501];
+bool in_queue[501];
+int visit[501];
 
-    start->d_cache = 0;
-    q.push(start);
-    start->in_q = true;
-    while (!q.empty()) {
-        Node* u = q.front();
-        q.pop();
-        u->in_q = false;
-        for (auto edge: u->edges) {
-            Node* v = edge->node;
-            int new_d = u->d_cache + edge->cost;
-            if (new_d < v->d_cache) {
-                v->d_cache = new_d;
-                if (v->visit_cnt >= N) {
-                    return false;
-                }
-                if (!v->in_q) {
-                    v->visit_cnt++;
-                    q.push(v);
-                    v->in_q = true;
-                }
-            }
+bool spfa(int src) {
+  memset(dist, 0x3f, sizeof(dist));
+  memset(in_queue, 0x00, sizeof(in_queue));
+  memset(visit, 0x00, sizeof(visit));
+  queue<int> q;
+  q.push(src);
+  dist[src] = 0;
+  in_queue[src] = true;
+  while (!q.empty()) {
+    int u = q.front(); q.pop();
+    in_queue[u] = false;
+    visit[u]++;
+    if (visit[u] >= n+m) return true;
+    for (auto e: adj[u]) {
+      int v = e.v;
+      ll vd = dist[u] + e.w;
+      if (vd < dist[v]) {
+        dist[v] = vd;
+        if (!in_queue[v]) {
+          in_queue[v] = true;
+          q.push(v);
         }
+      }
     }
-    return true;
+  }
+  return false;
 }
 
 int main(void)
 {
-    int N, M;
-
-    scanf("%d%d", &N, &M);
-    
-    vector<Node*> nodes(N);
-    for (int i = 0; i < N; i++) {
-        nodes[i] = new Node();
-        nodes[i]->idx = i;
-    }
-    
-    for (int i = 0; i < M; i++) {
-        int A, B, C;
-        scanf("%d%d%d", &A, &B, &C);
-        nodes[A - 1]->edges.push_back(new Node::Edge(nodes[B - 1], C));
-    }
-
-    if (!SPFA(nodes, nodes[0])) {
-        puts("-1");
-        return 0;
-    }
-
-    for (int i = 1; i < N; i++) {
-        printf("%d\n", nodes[i]->d_cache == INF ? -1 : nodes[i]->d_cache);
-    }
-
-    return 0;
+  scanf("%d%d", &n, &m);
+  for (int i = 0; i < m; i++) {
+    int a, b;
+    ll w;
+    scanf("%d%d%lld", &a, &b, &w);
+    adj[a].emplace_back(b, w);
+  }
+  if (spfa(1)) {
+    puts("-1"); return 0;
+  }
+  for (int i = 2; i <= n; i++) printf("%lld\n", dist[i] == 0x3f3f3f3f3f3f3f3f ? -1 : dist[i]);
 }

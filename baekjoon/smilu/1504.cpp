@@ -1,66 +1,63 @@
-#include<iostream>
-#include<vector>
-#include<queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef pair<int,int> pii;
-
-#define INF 900000
+const int L_INF = 0x7fffffff;
 
 struct edge {
-    int v, w;
-    edge(int v=0, int w=0):v(v),w(w) {}
+  int v, w;
+  edge() {}
+  edge(int v, int w): v(v), w(w) {}
 };
 
-vector<edge> edges[800];
-int minw[800];
-int n, e;
-int way[2];
-int sdist[2][2];
-int wayd;
+int n, m;
+vector<edge> adj[801];
 
-void dijkstra(int src)
-{
-    priority_queue<pii, vector<pii>, greater<pii>> Q;
-    for(int i=0; i<n; ++i) {
-        minw[i] = INF;
+vector<int> dijkstra(int src) {
+  vector<int> dist(n+1, L_INF);
+  vector<bool> visit(n+1, false);
+  priority_queue<pair<int,int>> q;
+  dist[src] = 0;
+  q.push({0, src});
+  while (!q.empty()) {
+    auto up = q.top();
+    q.pop();
+    int ud = -up.first;
+    int u = up.second;
+    if (visit[u]) continue;
+    visit[u] = true;
+    for (auto e: adj[u]) {
+      int v = e.v, vd = ud + e.w;
+      if (vd < dist[v]) {
+        dist[v] = vd;
+        q.push({-vd, v});
+      }
     }
-    Q.push(make_pair(0, src));
-    minw[src] = 0;
-    while(!Q.empty()) {
-        int u = Q.top().second; Q.pop();
-        for(edge e: edges[u]) {
-            int new_w = minw[u] + e.w;
-            if(new_w < minw[e.v]) {
-                minw[e.v] = new_w;
-                Q.push(make_pair(new_w, e.v));
-            }
-        }
-    }
+  }
+  return dist;
 }
 
+int add(int a, int b) {
+  if (a == L_INF || b == L_INF) return L_INF;
+  return a + b;
+}
 
-int main()
+int main(void)
 {
-    scanf("%d%d", &n, &e);
-    for(int i=0; i<e; ++i) {
-        int a, b, w;
-        scanf("%d%d%d", &a, &b, &w);
-        --a; --b;
-        edges[a].push_back(edge(b, w)); 
-        edges[b].push_back(edge(a, w));
-    }
-    scanf("%d%d", way, way+1);
-    --way[0];
-    --way[1];
-    dijkstra(0);
-    sdist[0][0] = minw[way[0]];
-    sdist[0][1] = minw[way[1]];
-    dijkstra(n-1);
-    sdist[1][0] = minw[way[0]];
-    sdist[1][1] = minw[way[1]];
-    dijkstra(way[0]);
-    wayd = minw[way[1]];
-    int ans = min(sdist[0][0] + sdist[1][1], sdist[0][1] + sdist[1][0]) + wayd;
-    printf("%d", ans > INF ? -1 : ans);
+  scanf("%d%d", &n, &m);
+  for (int i = 0; i < m; i++) {
+    int a, b, w;
+    scanf("%d%d%d", &a, &b, &w);
+    adj[a].emplace_back(b, w);
+    adj[b].emplace_back(a, w);
+  }
+  int v1, v2;
+  scanf("%d%d", &v1, &v2);
+  vector<int> dist_1 = dijkstra(1);
+  vector<int> dist_v1 = dijkstra(v1);
+  vector<int> dist_v2 = dijkstra(v2);
+  vector<int> dist_n = dijkstra(n);
+  int d1 = add(add(dist_1[v1], dist_v1[v2]), dist_v2[n]);
+  int d2 = add(add(dist_1[v2], dist_v2[v1]), dist_v1[n]);
+  int ans = min(d1, d2);
+  printf("%d\n", ans == L_INF ? -1 : ans);
 }
