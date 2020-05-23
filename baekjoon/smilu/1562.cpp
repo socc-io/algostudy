@@ -1,45 +1,41 @@
-
-#include <iostream>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-#define MOD 1000000000
+typedef long long ll;
 
-int N;
-int dp[101][10][10][10];
+const ll mod = 1000000000;
 
-int get_dp(int length, int last, int left, int right)
-{
-	if(dp[length][last][left][right] != -1) {
-		return dp[length][last][left][right];
+ll dp[10][10][100][10];
+
+ll get_dp(int f, int t, int idx, int v) {
+	if (idx < 0) return 0;
+	if (f > t) return 0;
+	if (v < f || v > t) return 0;
+	ll &ret = dp[f][t][idx][v];
+	if (ret != -1) return ret;
+	if (v == f) {
+		return ret = (get_dp(f  , t, idx-1, v+1)
+		            + get_dp(f+1, t, idx-1, v+1)) % mod;
 	}
-	int ret = 0;
-
-	// length - 1
-	// last - 1, last + 1
-	// left
-	// right`````````````````
+	if (v == t) {
+		return ret = (get_dp(f, t  , idx-1, v-1)
+		            + get_dp(f, t-1, idx-1, v-1)) % mod;
+	}
+	return ret = (get_dp(f, t, idx-1, v+1)
+	            + get_dp(f, t, idx-1, v-1)) % mod;
 }
 
 int main(void)
 {
-	scanf("%d", &N);
-
-	for(int i=0; i<101; ++i)
-		for(int j=0; j<10; ++j)
-			for(int k=0; k<10; ++k)
-				for(int l=0; l<10; ++l)
-					dp[i][j][k][l] = -1;
-
-	for(int i=1; i<=9; ++i) {
-		dp[1][i][i][i] = 1;
+	memset(dp, 0xff, sizeof(dp));
+	int n; scanf("%d", &n);
+	for (int i = 1; i < 10; i++) {
+		dp[i][i][0][i] = 1;
 	}
-
-	int ans = 0;
-	for(int i=0; i<10; ++i) {
-		ans = (ans + get_dp(N, i, 0, 9)) % MOD;
+	ll ans = 0;
+	for (int i = 0; i < 10; i++) {
+		ans += get_dp(0, 9, n-1, i);
+		// printf("%d: %lld\n", i, get_dp(0, 9, n-1, i));
 	}
-	printf("%d", ans)
-
-	return 0;
+	printf("%lld\n", ans % mod);
 }
