@@ -1,3 +1,6 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 typedef pair<int,int> pi;
 
 vector<int> LIS(const vector<int>& in){ // return LIS of array 'in'
