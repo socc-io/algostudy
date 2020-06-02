@@ -45,6 +45,16 @@ vector<point> graham_scan(vector<point> &ps) { // convex hull
   return rs;
 }
 
+double tri_area(const point &a, const point &b, const point &c) {
+  double ret = a.x*b.y
+             - b.x*a.y
+             + b.x*c.y
+             - c.x*b.y
+             + c.x*a.y
+             - a.x*c.y;
+  return ret / 2;
+}
+
 bool is_inside_poly(point p, const vector<point> &phs) {
   // @Args p: target point, phs: polygon hull points
   int cnt = 0; // collision count
