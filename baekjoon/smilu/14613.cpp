@@ -1,27 +1,41 @@
-#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
 
-double p[3];
-double dp[21][41];
+typedef long long ll;
 
-int main(void)
-{
-	scanf("%lf%lf%lf", p, p+1, p+2);
-	dp[0][20] = 1;
-	for(int stage = 1; stage <= 20; ++stage) {
-		for(int point = 0; point <= 41; ++point) {
-			dp[stage][point] = 
-				(point > 0 ? dp[stage-1][point-1] * p[0] : 0) + 
-				(point < 40 ? dp[stage-1][point+1] * p[1] : 0) +
-				(dp[stage-1][point] * p[2]);
+ll perm(int a, int b) {
+	ll ret = 1;
+	for (int i = 0; i < b; i++) ret *= a-i;
+	return ret;
+}
+
+ll comb(int a, int b) {
+	if (a-b < b) b = a-b;
+	return perm(a, b)/perm(b, b);
+}
+
+double pw, pl, pd;
+double pn[41];
+
+int main() {
+	ios::sync_with_stdio(0); cin.tie(0);
+	cin >> pw >> pl >> pd;
+	for (int nd = 0; nd <= 20; nd++) {
+		for (int nw = 0; nw <= 20-nd; nw++) {
+			int nl = 20-nd-nw;
+			ll cn = comb(20,nd)*comb(20-nd,nw);
+			double pp = pow(pw,nw)*pow(pl,nl)*pow(pd,nd);
+			pn[nw-nl+20] += pp*cn;
 		}
 	}
-	double res;
-	for(int i=0; i<4; ++i) {
-		res = 0;
-		for(int j=i*10; j<(i+1)*10; ++j) {
-			res += dp[20][j];
+	cout << fixed;
+	cout.precision(8);
+	for (int i = 0; i < 4; i++) {
+		double sum = 0;
+		for (int j = 0; j < 10; j++) {
+			sum += pn[i*10+j];
 		}
-		printf("%.8lf\n", res);
+		cout << sum << '\n';
 	}
-	printf("%.8lf\n", dp[20][40]);
+	cout << pn[40] << '\n';
 }

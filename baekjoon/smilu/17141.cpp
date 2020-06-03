@@ -1,132 +1,65 @@
-/*
- * author: smilu97
- * description:
- *   algorithm solving: https://www.acmicpc.net/problem/17141
- */
-
-#include <cstdio>
-#include <cstdlib>
-#include <vector>
-#include <queue>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define INF 0x6FFFFFFF
-typedef vector<vector<int>> vvi;
+typedef pair<int, int> pi;
 
-const int dd[4][2] = {
-    {1, 0},
-    {-1, 0},
-    {0, 1},
-    {0, -1},
-};
+const int dd[4][2] = {{-1,0},{1,0},{0,1},{0,-1}};
 
-int N, M, K;
-vvi tile(50, vector<int>(50));
+int n, m;
+int tile[50][50];
+vector<pi> spots;
 
-void print_vec(vector<int> & vec)
-{
-    for (auto v: vec) {
-        if (v == INF) printf("UR ");
-        else printf("%2d ", v);
-    } puts("");
+int experiment(const vector<bool> &flags) {
+  vector<vector<int>> dist(n, vector<int>(n, 0x3f3f3f3f));
+  queue<pi> q;
+  for (int i = 0; i < spots.size(); i++) {
+    if (flags[i] == false) continue;
+    int x = spots[i].first, y = spots[i].second;
+    q.push(spots[i]);
+    dist[x][y] = 0;
+  }
+  while (!q.empty()) {
+    auto u = q.front(); q.pop();
+    int nd = dist[u.first][u.second] + 1;
+    for (int di = 0; di < 4; di++) {
+      int nx = u.first + dd[di][0];
+      int ny = u.second + dd[di][1];
+      if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue;
+      if (tile[nx][ny] == 1) continue;
+      if (nd < dist[nx][ny]) {
+        dist[nx][ny] = nd;
+        q.push({nx, ny});
+      }
+    }
+  }
+  int ret = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      if (tile[i][j] == 1) continue;
+      ret = max(ret, dist[i][j]);
+    }
+  }
+  return ret;
 }
 
-void get_costvec(vector<int> & vec, vvi & distmap)
-{
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            if (tile[i][j] == 1) continue;
-            vec.push_back(distmap[i][j]);
-        }
+int main() {
+  ios::sync_with_stdio(0); cin.tie(0);
+  cin >> n >> m;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      cin >> tile[i][j];
+      if (tile[i][j] == 2) {
+        spots.push_back({i, j});
+      }
     }
-}
-
-void get_distance_map(vvi & res, int x, int y)
-{
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            res[i][j] = INF;  // clean with INF
-        }
-    }
-
-    queue<pair<int,int>> Q;
-    res[x][y] = 0;
-    Q.push(make_pair(x, y));
-    while(!Q.empty()) {
-        auto u = Q.front();
-        Q.pop();
-        for (int i = 0; i < 4; i++) {
-            int nx = u.first + dd[i][0];
-            if (nx < 0 || nx >= N) continue;  // out bound
-            int ny = u.second + dd[i][1];
-            if (ny < 0 || ny >= N) continue;  // out bound
-
-            if (tile[nx][ny] == 1) continue;  // wall
-            if (res[nx][ny] != INF) continue;  // already visited
-
-            res[nx][ny] = res[u.first][u.second] + 1;
-            Q.push(make_pair(nx, ny));
-        }
-    }
-}
-
-int main(void)
-{
-    scanf("%d%d", &N, &M);
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            scanf("%d", &tile[i][j]);
-        }
-    }
-
-    vvi dist(N, vector<int>(N));
-    vvi costvecs;
-    for (int x = 0; x < N; x++) {
-        for (int y = 0; y < N; y++) {
-            if (tile[x][y] != 2) continue;
-            get_distance_map(dist, x, y);
-            vector<int> costvec;
-            get_costvec(costvec, dist);
-            costvecs.push_back(costvec);
-        }
-    }
-
-    K = costvecs[0].size();
-    vector<int> ind(K, 0);  // combination state
-    vector<int> minvec(K);  // min_reduced costvecs
-    int mincost = INF;
-    for (int i = 0; i < M; i++) ind[i] = 1;
-    sort(ind.begin(), ind.end());
-
-    do {
-        bool stop = false;
-        for (int i = 0; i < K; i++) {
-            minvec[i] = INF;
-            for (int j = 0; j < costvecs.size(); j++) {
-                if (!ind[j]) continue;
-                if (minvec[i] > costvecs[j][i]) {
-                    minvec[i] = costvecs[j][i];
-                }
-            }
-            if (minvec[i] > mincost) {
-                stop = true;
-                break;
-            }
-        }
-        if (stop) continue;
-        int cost = -1;
-        for (auto v: minvec) {
-            if (cost < v) cost = v;
-        }
-        if (cost < mincost) mincost = cost;
-    } while (next_permutation(ind.begin(), ind.end()));
-
-    printf("%d\n", mincost == INF ? -1 : mincost);
-
-    for (auto v: costvecs) {
-        print_vec(v);
-    }
-
-    return 0;
+  }
+  vector<bool> comb(spots.size());
+  for (int i = 0; i < min((int)spots.size(), m); i++) {
+    comb[spots.size()-1-i] = true;
+  }
+  int ans = 0x3f3f3f3f;
+  do {
+    ans = min(ans, experiment(comb));
+  } while(next_permutation(comb.begin(), comb.end()));
+  cout << (ans == 0x3f3f3f3f ? -1 : ans) << '\n';
 }

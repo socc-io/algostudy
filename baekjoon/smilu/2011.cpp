@@ -1,31 +1,31 @@
-
-#include <iostream>
-#include <cstring>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-#define MOD 1000000
+typedef long long ll;
+const ll mod = 1000000;
 
-char s[5001];
-int dp[5000], len;
+int n;
+string s;
+ll mem[5001];
+ll dp(int pos) {
+	ll &ret = mem[pos];
+	if (ret != -1) return ret;
+	if (pos == n) return ret = 1;
+	ret = 0;
+	if (s[pos] == 0) return ret;
+	if (n - pos >= 2) {
+		int v = s[pos]*10 + s[pos+1];
+		if (v <= 26) ret = (ret + dp(pos+2)) % mod;
+	}
+	ret = (ret + dp(pos+1)) % mod;
+	return ret;
+}
 
-int main(void)
-{
-	scanf("%s", s);
-	len = strlen(s);
-	if(s[0] == '0') {
-		printf("0");
-		return 0;
-	}
-	dp[0] = 1;
-	dp[1] = 1;
-	for(int i=2; i<=len; ++i) {
-		if(s[i-1] != '0') {
-			dp[i] = dp[i-1];
-		}
-		if((s[i-2]-'0')*10+(s[i-1]-'0') <= 26 && s[i-2] != '0') {
-			dp[i] = (dp[i] + dp[i-2]) % MOD;
-		}
-	}
-	printf("%d", dp[len]);
+int main() {
+	ios::sync_with_stdio(0); cin.tie(0);
+	cin >> s;
+	n = s.size();
+	for (char &ch: s) ch -= '0';
+	memset(mem, 0xff, sizeof(mem));
+	cout << dp(0) << '\n';
 }

@@ -1,56 +1,31 @@
-#include <cstdio>
+#include <bits/stdc++.h>
+using namespace std;
 
-inline bool is_numb(char ch)
-{
-	return ('0' <= ch && ch <= '9');
-}
+struct Message {
+	int left;
+	int sender;
+} msg[10000];
 
-int getint()
-{
-	char ch;
-	int res = 0;
-	while( is_numb(ch = getchar()) ) {
-		res = res * 10 + ch - '0';
+int n, m, q;
+
+int main() {
+	ios::sync_with_stdio(0); cin.tie(0);
+	cin >> n >> m >> q;
+	for (int i = 0; i < m; i++) {
+		char ch; cin >> msg[i].left >> ch;
+		msg[i].sender = ch - 'A';
+		// cout << "msg " << i << ": " << msg[i].left << ' ' << msg[i].sender << '\n';
 	}
-	return res;
-}
-
-int main(void)
-{
-	bool check[26];
-
-	int N = getint();
-	int K = getint();
-	int Q = getint();
-
-	for(int i = 1; i < Q; ++i) {
-		while( is_numb(getchar()) ); // skip one integer
-		getchar(); // skip one (P) character
-		getchar(); // skip '\n'
+	if (msg[q-1].left == 0) {
+		cout << "-1\n";
+		return 0;
 	}
-
-	for(int i = Q; i <= K; ++i) {
-		int R = getint();
-		check[getchar() - 'A'] = true;
-		getchar(); // skip '\n'
-
-		if(R == 0) {
-			puts("-1");
-			return 0;
-		}
+	int b_set = 1;
+	for (int i = 0; i < m; i++) {
+		if (msg[i].left < msg[q-1].left) continue;
+		b_set |= 1 << msg[i].sender;
 	}
-
-	bool initial = true;
-	for(int i = 1; i < N; ++i) {
-		if(!check[i]) {
-			if(initial) {
-				initial = false;
-			} else {
-				putchar(' ');
-			}
-			putchar('A' + i);
-		}
+	for (int i = 0; i < n; i++) {
+		if ((b_set & (1<<i)) == 0) cout << (char)('A' + i) << ' ';
 	}
-
-	return 0;
 }
