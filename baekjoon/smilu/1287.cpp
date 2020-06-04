@@ -1,124 +1,109 @@
-#include <cstdio>
-#include <stack>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-#define INF (0x7FFFFFFF)
+typedef pair<int, int> pi;
 
-char infix[1001];
-char postfix[1001];
+const int L_INF = 0x3f3f3f3f;
 
-int postfix_len = 0;
+const pi op_mul = {0, '*'};
+const pi op_div = {0, '/'};
 
-long long calculate(long long a, long long b, char op)
-{
-	if(op == '+') return a + b;
-	else if(op == '-') return a - b;
-	else if(op == '*') return a * b;
-	else if(op == '/') return a / b;
-	// fprintf(stderr, "calculate error: %c\n", op);
-	return a + b;
+bool is_digit(char ch) {
+	return '0' <= ch && ch <= '9';
 }
 
-int get_prior(char ch)
-{
-	if(ch == '*') return 2;
-	else if(ch == '/') return 2;
-	else if(ch == '+') return 1;
-	else if(ch == '-') return 1;
-	// fprintf(stderr, "get_prior error: %c\n", ch);
-	return 1;
+bool is_op(char ch) {
+	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
 }
 
-int infix_to_postfix()
-{
-	stack<char> S;
+pi find_bracket(const string &s, int start = 0) {
+	int cur = start;
+	while (cur < s.size() && s[cur] != '(') ++cur;
+	if (cur == s.size()) return {-1, -1};
+	int beg = cur;
+	int lev = 0;
+	while (cur < s.size()) {
+		     if (s[cur] == '(') ++lev;
+		else if (s[cur] == ')') --lev;
+		if (lev == 0) break;
+		++cur;
+	}
+	if (cur == s.size()) return {-1, -1};
+	return {beg, cur + 1};
+}
 
-	for(char* ch = infix; (*ch) != '\0'; ++ch) {
-		char sym = *ch;
-		if('0' <= sym && sym <= '9') {
-			postfix[postfix_len++] = sym;
-		} else if(sym == '(') {
-			S.push(sym);
-		} else if(sym == ')') {
-			while(1)
-			{
-				if(S.empty()) return -1;
-				char t = S.top();
-				S.pop();
-				if(t == '(')
-					break;
-				else {
-					postfix[postfix_len++] = t;
-				}
-			}
-		} else {
-			while(1) {
-				if(S.empty()) break;
-				char t = S.top();
-				if(t == '(') break;
-				int t_prior = get_prior(t);
-				int sym_prior = get_prior(sym);
-				if(t_prior >= sym_prior) {
-					postfix[postfix_len++] = t;
-					S.pop();
-				} else {
-					break;
-				}
-			}
-			S.push(sym);
+pi parse_int(const string &s, int start = 0) {
+	int ret = 0;
+	int cur = start;
+	while (is_digit(s[cur])) {
+		ret = ret*10 + (s[cur] - '0');
+		++cur;
+	}
+	// cout << "parsed: " << ret << '\n';
+	return {ret, cur};
+}
+
+int calculate_items(const vector<pi> &items) {
+	vector<pi> stk;
+	for (const auto &i: items) {
+		stk.push_back(i);
+		auto M = stk[stk.size()-2];
+		if (M == op_mul || M == op_div) {
+			auto L = stk[stk.size()-3];
+			auto R = stk[stk.size()-1];
+			int val;
+			     if (M == op_mul) val = L.second * R.second;
+			else if (M == op_div) val = L.second / R.second;
+			stk[stk.size()-3] = {1, val};
+			stk.pop_back();
+			stk.pop_back();
 		}
 	}
-
-	while(!(S.empty())) {
-		char t = S.top();
-		S.pop();
-		postfix[postfix_len++] = t;
+	assert(stk[0].first == 1);
+	int ret = stk[0].second;
+	for (int i = 1; i < stk.size(); i += 2) {
+		char op = stk[i].second;
+		int R = stk[i+1].second;
+		     if (op == '+') ret += R;
+		else if (op == '-') ret -= R;
 	}
-
-	return 0;
+	return ret;
 }
 
-long long calculate_postfix()
-{
-	stack<long long> S;
-	for(char* ch = postfix; (*ch) != '\0'; ++ch) {
-		char sym = *ch;
-		if('0' <= sym && sym <= '9') {
-			S.push(sym - '0');
+int calculate(const string &s, int start, int end) {
+	// cout << "calculate: " << s.substr(start, end-start) << '\n';
+	vector<pi> items;
+	bool turn = true;
+	for (int cur = start; cur != end;) {
+		char ch = s[cur];
+		if (turn) {
+			if (is_op(ch) || ch == ')') return L_INF;
+			if (ch == '(') {
+				pi bracket = find_bracket(s, cur);
+				int val = calculate(s, cur+1, bracket.second-1);
+				if (val == L_INF) return L_INF;
+				items.push_back({1, val});
+				cur = bracket.second;
+			} else {
+				pi parsed = parse_int(s, cur);
+				items.push_back({1, parsed.first});
+				cur = parsed.second;
+			}
 		} else {
-			if(S.empty()) return INF;
-			long long a = S.top(); S.pop();
-			if(S.empty()) return INF;
-			long long b = S.top(); S.pop();
-			if(a == 0 && sym == '/') return INF;
-			long long c = calculate(b, a, sym);
-			S.push(c);
+			if (!is_op(ch)) return L_INF;
+			items.push_back({0, ch});
+			++cur;
 		}
+		turn = !turn;
 	}
-
-	if(S.empty()) return INF;
-	return S.top();
+	if (items.back().first == 0) return L_INF;
+	return calculate_items(items);
 }
 
-int main(void)
-{
-	scanf("%s", infix);
-
-	int flag = infix_to_postfix();
-
-	if(flag == -1) {
-		printf("ROCK");
-		return 0;
-	}
-
-	// printf("postfix: %s\n", postfix);
-
-	long long res = calculate_postfix();
-
-	if(res != INF) {
-		printf("%lld", res);
-	} else {
-		printf("ROCK");
-	}
+int main() {
+	ios::sync_with_stdio(0); cin.tie(0);
+	string s; cin >> s;
+	int ret = calculate(s, 0, s.size());
+	if (ret == L_INF) cout << "ROCK\n";
+	else cout << ret << '\n';
 }

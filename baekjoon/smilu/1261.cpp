@@ -1,75 +1,60 @@
-#include <cstdio>
-#include <queue>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define MAX_WIDTH 100
-#define MAX_HEIGHT MAX_WIDTH
-#define NUM_TILE (MAX_WIDTH * MAX_HEIGHT)
-#define INF 1234567890
+typedef pair<int, int> pi;
 
-#define EX(x) ((x) / width)
-#define EY(x) ((x) % width)
-#define CP(x, y) ((x) * width + (y))
-
-typedef pair<int, int> iPair;
-
-int width, height;
-int dist[NUM_TILE];
-int visited[NUM_TILE];
-char tile[MAX_HEIGHT][MAX_WIDTH];
-
-int dirs2[4][2] = {
-    {1, 0},
-    {-1, 0},
-    {0, 1},
-    {0, -1},
+const int dd[4][2] = {
+  {-1,0},{1,0},{0,1},{0,-1}
 };
-int dirs1[4] = { 0, 0, 1, -1 };
 
-int main(void)
-{
-    scanf("%d%d", &width, &height);
-    for (int i = 0; i < height; i++) {
-        char* s = (char*)tile + (MAX_WIDTH * i);
-        scanf("%s", s);
+int n, m, nm;
+char tile[101][101];
+char buf[111];
+
+pi decompose(int index) {
+  return {index / m, index % m};
+}
+
+int compose(int x, int y) {
+  return x*m + y;
+}
+
+int main() {
+  ios::sync_with_stdio(0); cin.tie(0);
+  cin >> m >> n; nm = n * m;
+  for (int i = 0; i < n; i++) {
+    cin >> tile[i];
+  }
+  priority_queue<pi, vector<pi>, greater<pi>> pq;
+  vector<int> dist(nm, 0x3f3f3f3f);
+  vector<bool> vis(nm);
+  dist[0] = 0;
+  pq.push({0, 0});
+  while (!pq.empty()) {
+    auto t = pq.top(); pq.pop();
+    int ui = t.second;
+    if (vis[ui]) continue;
+    vis[ui] = true;
+    auto u = decompose(ui);
+    int ux = u.first, uy = u.second;
+    int ud = t.first;
+    for (int di = 0; di < 4; di++) {
+      int vx = ux + dd[di][0], vy = uy + dd[di][1];
+      int vi = compose(vx, vy);
+      if (vx < 0 || vx >= n || vy < 0 || vy >= m) continue;
+      int vd = ud + (tile[vx][vy] - '0');
+      if (vd < dist[vi]) {
+        dist[vi] = vd;
+        pq.push({vd, vi});
+      }
     }
-    dirs1[0] = width;
-    dirs1[1] = -width;
+  }
 
-    for (int i = 0; i < NUM_TILE; i++) {
-        dist[i] = INF;
-    }
+  // for (int i = 0; i < n; i++) {
+  //   for (int j = 0; j < m; j++) {
+  //     cout << dist[compose(i, j)] << ',';
+  //   } cout << '\n';
+  // }
 
-    priority_queue<iPair, vector<iPair>, greater<iPair> > q;
-    q.push(make_pair(0, 0));
-    dist[0] = 0;
-
-    while(!q.empty()) {
-        int u = q.top().second;
-        int ux = EX(u);
-        int uy = EY(u);
-        int u_dist = dist[u];
-        q.pop();
-        if (visited[u]) continue;
-        visited[u] = 1;
-        for (int di = 0; di < 4; ++di) {
-            int dx = dirs2[di][0];
-            int dy = dirs2[di][1];
-            int vx = ux + dx;
-            int vy = uy + dy;
-            if (vx < 0 || vx >= height ||
-                vy < 0 || vy >= width) continue;
-            int v = u + dirs1[di];
-            int v_dist = u_dist + tile[vx][vy] - '0';
-            if (v_dist < dist[v]) {
-                dist[v] = v_dist;
-                q.push(make_pair(v_dist, v));
-            }
-        }
-    }
-
-    printf("%d", dist[CP(width - 1, height - 1)]);
-
-    return 0;
+  cout << dist[compose(n-1, m-1)] << '\n';
 }

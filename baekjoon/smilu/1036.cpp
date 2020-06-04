@@ -1,113 +1,90 @@
-/*
- * author: smilu97
- * description:
- *   algorithm solving of https://www.acmicpc.net/problem/1036
- */
-
-#include <cstdio>
-#include <cstring>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define BI_SIZE 55
+const int ord = 36;
+const int cap = 55;
 
-inline char to_ch(char val) {
-    if (val < 10) return val + '0';
-    else return val + ('A' - 10);
+char convert(char ch) {
+  if (0 <= ch && ch <= 9) return '0' + ch;
+  return 'A' + (ch - 10);
 }
-inline char to_in(char ch) {
-    if (ch <= '9') return ch - '0';
-    else return ch - ('A' - 10);
-}
-
-struct Bigint {
-    char data[BI_SIZE];
-    void clear() {
-        memset(data, 0, BI_SIZE);
+struct bigint {
+  char v[cap];
+  int len() const {
+    int ret = cap - 1;
+    while (ret >= 0 && v[ret] == 0) --ret;
+    return max(ret + 1, 1);
+  }
+  void fill(char iv = 0) {
+    for (int i = 0; i < cap; i++) v[i] = iv;
+  }
+  void from_string(const string &str) {
+    int n = str.size();
+    for (int i = 0; i < n; i++) {
+      char ch = str[n-1-i];
+      if ('0' <= ch && ch <= '9') ch -= '0';
+      else if ('A' <= ch & ch <= 'Z') ch -= 'A' - 10;
+      v[i] = ch;
     }
-    int get_length() {
-        int i = BI_SIZE - 1;
-        while (data[i] == 0 && i >= 0) i--;
-        return i + 1;
+    for (int i = n; i < cap; i++) v[i] = 0;
+  }
+  string to_string() const {
+    string ret;
+    int l = len();
+    for (int i = l-1; i >= 0; i--) ret += convert(v[i]);
+    return ret;
+  }
+  bigint operator+(const bigint &b) const {
+    char carry = 0;
+    bigint ret;
+    for (int i = 0; i < cap; i++) {
+      char sum = v[i] + b.v[i] + carry;
+      ret.v[i] = sum % ord;
+      carry = sum / ord;
     }
-    void parse(char* str) {
-        int len = strlen(str);
-        for (int i = 0; i < len; i++) {
-            data[i] = to_in(str[len - 1 - i]);
-        }
+    return ret;
+  }
+  void operator+=(const bigint &b) {
+    (*this) = (*this) + b;
+  }
+  bool operator<(const bigint &b) const {
+    for (int i = cap-1; i >= 0; i--) {
+           if (v[i] < b.v[i]) return false;
+      else if (v[i] > b.v[i]) return true;
     }
-    void add(Bigint & b) {
-        char carry = 0;
-        for (int i = 0; i < BI_SIZE; i++) {
-            char tmp = data[i] + b.data[i] + carry;
-            data[i] = tmp % 36;
-            carry = tmp >= 36;
-        }
-    }
-    void add_pos(int pos, char num) {
-        char carry = num;
-        for (int i = pos; i < BI_SIZE; i++) {
-            char tmp = data[i] + carry;
-            data[i] = tmp % 36;
-            carry = tmp >= 36;
-        }
-    }
-    void to_str(char* str) {
-        bool zero = true;
-        for (int i = get_length() - 1; i >= 0; i--) {
-            *str++ = to_ch(data[i]);
-            zero = false;
-        }
-        if (zero) *str++ = '0';
-        *str = '\0';
-    }
-    void print() {
-        char tmp[51];
-        to_str(tmp);
-        puts(tmp);
-    }
-    bool operator<(Bigint & b) const {
-        int i = BI_SIZE - 1;
-        while (data[i] == b.data[i] && i > 0) i--;
-        return data[i] < b.data[i];
-    }
-    Bigint() { clear(); }
+    return false;
+  }
+  bigint(char iv = 0) { fill(iv); }
 };
 
-int main(void)
-{
-    int N, K;
-    vector<Bigint> arr(50);
-    vector<Bigint> pot(36);  // potential
-    
-    scanf("%d", &N);
-    for (int i = 0; i < N; i++) {
-        char tmp[51];
-        scanf("%s", tmp);
-        arr[i].parse(tmp);
-        int len = arr[i].get_length();
-        for (int j = 0; j < len; j++) {
-            char d = arr[i].data[j];
-            pot[d].add_pos(j, 35 - d);
-        }
-    }
-    scanf("%d", &K);
+bigint vs[50];
+bigint gains[ord];
 
-    vector<int> ind(36);
-    for (int i = 0; i < 36; i++) ind[i] = i;
-    sort(ind.begin(), ind.end(), [&pot](int a, int b) {
-        return pot[a] < pot[b];
-    });
+bigint gain(const bigint &val, char ch) {
+  bigint ret;
+  int l = val.len();
+  for (int i = 0; i < l; i++) {
+    ret.v[i] = val.v[i] == ch ? (35 - ch) : 0;
+  }
+  return ret;
+}
 
-    Bigint sum;
-    for (int i = 0; i < N; i++) {
-        sum.add(arr[i]);
-    }
-    for (int i = 0; i < K; i++) {
-        sum.add(pot[ind[35 - i]]);
-    }
-    sum.print();
+int main() {
+  ios::sync_with_stdio(0); cin.tie(0);
 
-    return 0;
+  int n; cin >> n;
+  for (int i = 0; i < n; i++) {
+    string s; cin >> s;
+    vs[i].from_string(s);
+    // cout << "vs[" << i << "]: " << vs[i].to_string() << '\n';
+    for (int j = 0; j < ord; j++) {
+      gains[j] += gain(vs[i], j);
+    }
+  }
+  int k; cin >> k;
+  sort(gains, gains + ord);
+  bigint sum;
+  for (int i = 0; i < n; i++) sum += vs[i];
+  for (int i = 0; i < k; i++) sum += gains[i];
+  cout << sum.to_string() << '\n';
 }
