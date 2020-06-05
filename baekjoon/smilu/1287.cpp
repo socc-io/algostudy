@@ -1,109 +1,367 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef pair<int, int> pi;
+class BigInt{
+public:
+	int sign;
+	string s;
 
-const int L_INF = 0x3f3f3f3f;
+	BigInt() : s("") {}
 
-const pi op_mul = {0, '*'};
-const pi op_div = {0, '/'};
+	BigInt(string x){
+		*this = x;
+	}
 
-bool is_digit(char ch) {
-	return '0' <= ch && ch <= '9';
+	BigInt(int x){
+		*this = to_string(x);
+	}
+
+	BigInt negative(){
+		BigInt x = *this;
+
+		x.sign *= -1;
+
+		return x;
+	}
+
+	BigInt normalize(int newSign){
+		for(int a = s.size() - 1; a > 0 && s[a] == '0'; a--)
+			s.erase(s.begin() + a);
+
+		sign = (s.size() == 1 && s[0] == '0' ? 1 : newSign);
+
+		return *this;
+	}
+
+	void operator =(string x){
+		int newSign = (x[0] == '-' ? -1 : 1);
+
+		s = (newSign == -1 ? x.substr(1) : x);
+
+		reverse(s.begin(), s.end());
+
+		this->normalize(newSign);
+	}
+
+	bool operator ==(const BigInt &x) const{
+		return (s == x.s && sign == x.sign);
+	}
+
+	bool operator <(const BigInt &x) const{
+		if(sign != x.sign) return sign < x.sign;
+
+		if(s.size() != x.s.size())
+			return (sign == 1 ? s.size() < x.s.size() : s.size() > x.s.size());
+
+		for(int a = s.size() - 1; a >= 0; a--) if(s[a] != x.s[a])
+			return (sign == 1 ? s[a] < x.s[a] : s[a] > x.s[a]);
+
+		return false;
+	}
+
+	bool operator <=(const BigInt &x) const{
+		return (*this < x || *this == x);
+	}
+
+	bool operator >(const BigInt &x) const{
+		return (!(*this < x) && !(*this == x));
+	}
+
+	bool operator >=(const BigInt &x) const{
+		return (*this > x || *this == x);
+	}
+
+	BigInt operator +(BigInt x){
+		BigInt curr = *this;
+
+		if(curr.sign != x.sign) return curr - x.negative();
+
+		BigInt res;
+
+		for(int a = 0, carry = 0; a < s.size() || a < x.s.size() || carry; a++){
+			carry += (a < curr.s.size() ? curr.s[a] - '0' : 0) + (a < x.s.size() ? x.s[a] - '0' : 0);
+
+			res.s += (carry % 10 + '0');
+
+			carry /= 10;
+		}
+
+		return res.normalize(sign);
+	}
+
+	BigInt operator -(BigInt x){
+		BigInt curr = *this;
+
+		if(curr.sign != x.sign) return curr + x.negative();
+
+		int realSign = curr.sign;
+
+		curr.sign = x.sign = 1;
+
+		if(curr < x) return ( (x - curr).negative()).normalize(-realSign);
+
+		BigInt res;
+
+		for(int a = 0, borrow = 0; a < s.size(); a++){
+			borrow = (curr.s[a] - borrow - (a < x.s.size() ? x.s[a] : '0'));
+
+			res.s += (borrow >= 0 ? borrow + '0' : borrow + '0' + 10);
+
+			borrow = (borrow >= 0 ? 0 : 1);
+		}
+
+		return res.normalize(realSign);
+	}
+
+	BigInt operator *(BigInt x){
+		BigInt res("0");
+
+		for(int a = 0, b = s[a] - '0'; a < s.size(); a++, b = s[a] -'0'){
+			while(b--) res = (res + x);
+
+			x.s.insert(x.s.begin(), '0');
+		}
+
+		return res.normalize(sign * x.sign);
+	}
+
+	BigInt operator /(BigInt x){
+		if(x.s.size() == 1 && x.s[0] == '0') x.s[0] /= (x.s[0] - '0');
+
+		BigInt temp("0"), res;
+
+		for(int a = 0; a < s.size(); a++)
+			res.s += "0";
+		
+		int newSign = sign * x.sign;
+
+		x.sign = 1;
+
+		for(int a = s.size() - 1; a >= 0; a--){
+			temp.s.insert(temp.s.begin(), '0');
+			temp = temp + s.substr(a, 1);
+
+			while(!(temp < x)){
+				temp = temp - x;
+				res.s[a]++;
+			}
+		}
+
+		return res.normalize(newSign);
+	}
+
+	BigInt operator %(BigInt x){
+		if(x.s.size() == 1 && x.s[0] == '0') x.s[0] /= (x.s[0] - '0');
+
+		BigInt res("0");
+
+		x.sign = 1;
+
+		for(int a = s.size() - 1; a >= 0; a--){
+			res.s.insert(res.s.begin(), '0');
+
+			res = res + s.substr(a, 1);
+
+			while(!(res < x))
+				res = res - x;
+		}
+
+		return res.normalize(sign);
+	}
+
+	// operator string(){
+	// 	string ret = s;
+
+	// 	reverse(ret.begin(), ret.end());
+
+	// 	return (sign == -1 ? "-" : "") + s;
+	// }
+
+	string toString() const{
+		string ret = s;
+
+		reverse(ret.begin(), ret.end());
+
+		return (sign == -1 ? "-" : "") + ret;
+	}
+
+	BigInt toBase10(int base){
+		BigInt exp(1), res("0"), BASE(base);
+		
+		for(int a = 0; a < s.size(); a++){
+			int curr = (s[a] < '0' || s[a] > '9' ? (toupper(s[a]) - 'A' + 10) : (s[a] - '0'));
+
+			res = res + (exp * BigInt(curr));
+			exp = exp * BASE;
+		}
+
+		return res.normalize(sign);
+	}
+
+	BigInt toBase10(int base, BigInt mod){
+		BigInt exp(1), res("0"), BASE(base);
+		
+		for(int a = 0; a < s.size(); a++){
+			int curr = (s[a] < '0' || s[a] > '9' ? (toupper(s[a]) - 'A' + 10) : (s[a] - '0'));
+
+			res = (res + ((exp * BigInt(curr) % mod)) % mod);
+			exp = ((exp * BASE) % mod);
+		}
+
+		return res.normalize(sign);
+	}
+
+	string convertToBase(int base){
+		BigInt ZERO(0), BASE(base), x = *this;
+		string modes = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+		if(x == ZERO)
+			return "0";
+
+		string res = "";
+
+		while(x > ZERO){
+			BigInt mod = x % BASE;
+
+			x = x - mod;
+
+			if(x > ZERO)
+				x = x / BASE;
+
+			res = modes[stoi(mod.toString())] + res;
+		}
+
+		return res;
+	}
+
+	BigInt toBase(int base){
+		return BigInt(this->convertToBase(base));
+	}
+
+	friend ostream &operator <<(ostream &os, const BigInt &x){
+		os << x.toString();
+
+		return os;
+	}
+};
+
+int precede_map[256];
+void init_precede() {
+	precede_map[43] = 1; // '+'
+	precede_map[45] = 1; // '-'
+	precede_map[42] = 2; // '*'
+	precede_map[47] = 2; // '/'
+	precede_map[94] = 3; // '^'
+}
+int precede(char ch) {
+  return precede_map[(int)ch];
 }
 
 bool is_op(char ch) {
-	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+	return ch == '*' || ch == '/' || ch == '+' || ch == '-';
 }
 
-pi find_bracket(const string &s, int start = 0) {
-	int cur = start;
-	while (cur < s.size() && s[cur] != '(') ++cur;
-	if (cur == s.size()) return {-1, -1};
-	int beg = cur;
-	int lev = 0;
-	while (cur < s.size()) {
-		     if (s[cur] == '(') ++lev;
-		else if (s[cur] == ')') --lev;
-		if (lev == 0) break;
-		++cur;
-	}
-	if (cur == s.size()) return {-1, -1};
-	return {beg, cur + 1};
+typedef BigInt t_val;
+enum t_item { ITEM_OP, ITEM_VAL };
+typedef pair<t_item, pair<t_val, char>> item;
+
+const t_val inf("4557430888798830399");
+
+vector<item> convert_infix_postfix(const string &infix) {
+  stack<char> stk;
+  stk.push('#');
+  vector<item> postfix;
+
+	bool turn_op = false;
+  for (int i = 0; i < (int)infix.size(); i++) {
+    char ch = infix[i];
+    if (isdigit(ch)) {
+			if (turn_op) { postfix.clear(); return postfix; }
+			turn_op = true;
+			int end = i;
+			while (isdigit(infix[end])) ++end;
+			BigInt val(infix.substr(i, end-i));
+			postfix.push_back({ITEM_VAL, {val, 0}});
+			i = end-1;
+    } else if (ch == '(') {
+			if (turn_op) { postfix.clear(); return postfix; }
+			turn_op = false;
+      stk.push('(');
+    } else if (ch == ')') {
+			if (!turn_op) { postfix.clear(); return postfix; }
+			turn_op = true;
+      while (stk.top() != '#' && stk.top() != '(') {
+        postfix.push_back({ITEM_OP, {0, stk.top()}});
+				stk.pop();
+      }
+			if (stk.top() != '(') { postfix.clear(); return postfix; }
+      stk.pop();
+    } else if (is_op(ch)) {
+			if (!turn_op) { postfix.clear(); return postfix; }
+			turn_op = false;
+      if (precede(ch) > precede(stk.top())) {
+        stk.push(ch);
+      } else {
+        while (stk.top() != '#' && precede(ch) <= precede(stk.top())) {
+          postfix.push_back({ITEM_OP, {0, stk.top()}});
+          stk.pop();
+        }
+        stk.push(ch);
+      }
+    } else { postfix.clear(); return postfix; }
+  }
+
+  while (stk.top() != '#') {
+    postfix.push_back({ITEM_OP, {0, stk.top()}});
+    stk.pop();
+  }
+
+  return postfix;
 }
 
-pi parse_int(const string &s, int start = 0) {
-	int ret = 0;
-	int cur = start;
-	while (is_digit(s[cur])) {
-		ret = ret*10 + (s[cur] - '0');
-		++cur;
-	}
-	// cout << "parsed: " << ret << '\n';
-	return {ret, cur};
+t_val process_operator(t_val L, t_val R, char op) {
+	if (op == '*') return L * R;
+	if (op == '/') return L / R;
+	if (op == '+') return L + R;
+	if (op == '-') return L - R;
+	return 0;
 }
 
-int calculate_items(const vector<pi> &items) {
-	vector<pi> stk;
-	for (const auto &i: items) {
-		stk.push_back(i);
-		auto M = stk[stk.size()-2];
-		if (M == op_mul || M == op_div) {
-			auto L = stk[stk.size()-3];
-			auto R = stk[stk.size()-1];
-			int val;
-			     if (M == op_mul) val = L.second * R.second;
-			else if (M == op_div) val = L.second / R.second;
-			stk[stk.size()-3] = {1, val};
-			stk.pop_back();
-			stk.pop_back();
+t_val process_postfix(const vector<item> &items) {
+	stack<t_val> stk;
+	for (int i = 0; i < (int)items.size(); i++) {
+		auto item = items[i];
+		if (item.first == ITEM_VAL) {
+			stk.push(item.second.first);
+		} else {
+			char op = item.second.second;
+			if (stk.empty()) return inf;
+			t_val R = stk.top(); stk.pop();
+			if (stk.empty()) return inf;
+			t_val L = stk.top(); stk.pop();
+			t_val T = process_operator(L, R, op);
+			if (T == inf) return inf;
+			stk.push(T);
 		}
 	}
-	assert(stk[0].first == 1);
-	int ret = stk[0].second;
-	for (int i = 1; i < stk.size(); i += 2) {
-		char op = stk[i].second;
-		int R = stk[i+1].second;
-		     if (op == '+') ret += R;
-		else if (op == '-') ret -= R;
-	}
+	if (stk.empty()) return inf;
+	t_val ret = stk.top(); stk.pop();
+	if (!stk.empty()) return inf;
 	return ret;
 }
 
-int calculate(const string &s, int start, int end) {
-	// cout << "calculate: " << s.substr(start, end-start) << '\n';
-	vector<pi> items;
-	bool turn = true;
-	for (int cur = start; cur != end;) {
-		char ch = s[cur];
-		if (turn) {
-			if (is_op(ch) || ch == ')') return L_INF;
-			if (ch == '(') {
-				pi bracket = find_bracket(s, cur);
-				int val = calculate(s, cur+1, bracket.second-1);
-				if (val == L_INF) return L_INF;
-				items.push_back({1, val});
-				cur = bracket.second;
-			} else {
-				pi parsed = parse_int(s, cur);
-				items.push_back({1, parsed.first});
-				cur = parsed.second;
-			}
-		} else {
-			if (!is_op(ch)) return L_INF;
-			items.push_back({0, ch});
-			++cur;
-		}
-		turn = !turn;
-	}
-	if (items.back().first == 0) return L_INF;
-	return calculate_items(items);
-}
-
 int main() {
+	init_precede();
 	ios::sync_with_stdio(0); cin.tie(0);
-	string s; cin >> s;
-	int ret = calculate(s, 0, s.size());
-	if (ret == L_INF) cout << "ROCK\n";
-	else cout << ret << '\n';
+	string infix; cin >> infix;
+	auto postfix = convert_infix_postfix(infix);
+
+	// for (const auto &item: postfix) {
+	// 	if (item.first == ITEM_OP) cout << (char)item.second.second;
+	// 	else cout << item.second.first;
+	// } cout << '\n';
+
+	t_val ret = process_postfix(postfix);
+	if (ret == inf) cout << "ROCK";
+	else cout << ret;
 }
