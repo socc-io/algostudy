@@ -14,7 +14,7 @@ public:
   }
   void update(int n, int s, int e, int x, int val) {
     if (s == e) {
-      vs[n] = val;
+      vs[n] = min(vs[n], val);
       return;
     }
     int m = (s+e)>>1, l = n<<1, r = l|1;
@@ -55,9 +55,7 @@ public:
 };
 
 struct Ship {
-  int mx, Mx;
-  int my, My;
-  int w;
+  int mx, Mx, my, My, w;
   void input() {
     int a0, a1, a2, a3;
     cin >> a0 >> a1 >> a2 >> a3 >> w;
@@ -82,55 +80,51 @@ struct Laser {
   }
 };
 
-void solve() {
+vector<int> solve() {
   int sz_grid, num_ship, num_laser;
   cin >> sz_grid >> num_ship >> num_laser;
-
-  Zipper x_zipper, y_zipper;
-
+  
   vector<Ship> ships(num_ship);
-  for (int i = 0; i < num_ship; i++) {
-    ships[i].input();
-    x_zipper.add(ships[i].mx);
-    x_zipper.add(ships[i].Mx);
-    y_zipper.add(ships[i].my);
-    y_zipper.add(ships[i].My);
-  }
-
   vector<Laser> lasers(num_laser);
-  for (int i = 0; i < num_laser; i++) {
-    lasers[i].input();
-    if (lasers[i].x != -1) x_zipper.add(lasers[i].x);
-    if (lasers[i].y != -1) y_zipper.add(lasers[i].y);
+  for (auto &ship: ships) ship.input();
+  for (auto &laser: lasers) laser.input();
+  
+  Zipper x_zipper, y_zipper;
+  for (auto &ship: ships) {
+    x_zipper.add(ship.mx);
+    x_zipper.add(ship.Mx);
+    y_zipper.add(ship.my);
+    y_zipper.add(ship.My);
   }
-
+  for (auto &laser: lasers) {
+    if (laser.x != -1) x_zipper.add(laser.x);
+    if (laser.y != -1) y_zipper.add(laser.y);
+  }
   x_zipper.organize();
   y_zipper.organize();
-
-  for (int i = 0; i < num_ship; i++) {
-    ships[i].mx = x_zipper.get(ships[i].mx);
-    ships[i].Mx = x_zipper.get(ships[i].Mx);
-    ships[i].my = y_zipper.get(ships[i].my);
-    ships[i].My = y_zipper.get(ships[i].My);
+  for (auto &ship: ships) {
+    ship.mx = x_zipper.get(ship.mx);
+    ship.Mx = x_zipper.get(ship.Mx);
+    ship.my = y_zipper.get(ship.my);
+    ship.My = y_zipper.get(ship.My);
   }
-  for (int i = 0; i < num_laser; i++) {
-    if (lasers[i].x != -1) lasers[i].x = x_zipper.get(lasers[i].x);
-    if (lasers[i].y != -1) lasers[i].y = y_zipper.get(lasers[i].y);
+  for (auto &laser: lasers) {
+    if (laser.x != -1) laser.x = x_zipper.get(laser.x);
+    if (laser.y != -1) laser.y = y_zipper.get(laser.y);
   }
 
   MinSegTree x_seg, y_seg;
   x_seg.set_se(0, (int)x_zipper.size() - 1);
   y_seg.set_se(0, (int)y_zipper.size() - 1);
 
-  for (int i = num_laser - 1; i >= 0; i--) {
+  for (int i = 0; i < num_laser; i++) {
     const auto &laser = lasers[i];
     if (laser.x != -1) x_seg.update(laser.x, i);
     if (laser.y != -1) y_seg.update(laser.y, i);
   }
   
   vector<int> ans(num_laser);
-  for (int i = 0; i < num_ship; i++) {
-    const auto &ship = ships[i];
+  for (const auto &ship: ships) {
     int x_idx = x_seg.query(ship.mx, ship.Mx);
     int y_idx = y_seg.query(ship.my, ship.My);
     int idx = min(x_idx, y_idx);
@@ -138,11 +132,13 @@ void solve() {
     ans[idx] = max(ans[idx], ship.w);
   }
 
-  for (int v: ans) cout << v << '\n';
+  return ans;
 }
 
 int main() {
   ios::sync_with_stdio(0); cin.tie(0);
   int t; cin >> t;
-  while (t--) solve();
+  while (t--) for (int v: solve()) {
+    cout << v << '\n';
+  }
 }
