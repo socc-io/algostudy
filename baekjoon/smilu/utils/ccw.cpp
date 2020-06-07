@@ -27,6 +27,12 @@ int is_intersect(pair<pll, pll> x, pair<pll, pll> y) {
   return ab <= 0 && cd <= 0;
 }
 
+bool inside(pll p, pll a, pll b) {
+  if (ccw(a, b, p)) return false;
+  if (a > b) swap(a, b);
+  return a <= p && p <= b;
+}
+
 int is_intersect_2(pair<pll, pll> x, pair<pll, pll> y) {
   // excluding point x.second
   pll a = x.first;
