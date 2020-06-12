@@ -57,3 +57,55 @@ int main(){
         puts("-1");
     }
 }
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class SCC: public vector<vector<int>> {
+  vector<int> dfsn;
+  vector<int> sn;
+  vector<bool> finished;
+  stack<int> s;
+  int piv;
+public:
+  int n;
+  vector<vector<int>> adj;
+  void add_edge(int u, int v) { adj[u].push_back(v); }
+  int dfs(int u) {
+    dfsn[u] = ++piv;
+    s.push(u);
+
+    int res = dfsn[u];
+    for (int v: adj[u]) {
+      if (dfsn[v] == 0) res = min(res, dfs(v));
+      else if (!finished[v]) res = min(res, dfsn[v]);
+    }
+
+    if (res == dfsn[u]) {
+      vector<int> vs;
+      while (1) {
+        int t = s.top(); s.pop();
+        vs.push_back(t);
+        finished[t] = true;
+        sn[t] = size();
+        if (t == u) break;
+      }
+      sort(vs.begin(), vs.end());
+      push_back(vs);
+    }
+
+    return res;
+  }
+  vector<int> execute() {
+    piv = 0;
+    sn.resize(n, 0);
+    dfsn.resize(n, 0);
+    finished.resize(n, false);
+    while (!s.empty()) s.pop();
+    for (int i = 0; i < n; i++) {
+      if (dfsn[i] == 0) dfs(i);
+    }
+    return sn;
+  }
+  SCC(int n): n(n), adj(n) {}
+};
