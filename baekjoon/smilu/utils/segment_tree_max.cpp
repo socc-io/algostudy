@@ -1,43 +1,60 @@
-#include <cstring>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
 #define INF 0x7FFFFFFF
-#define S_SIZE 500000
-#define V_SIZE (4*S_SIZE)
 
-struct MaxSegmentTree {
-  int v[V_SIZE];
-  MaxSegmentTree(int init = -INF) {
-    for (int i = 0; i < V_SIZE; i++) v[i] = init;
+template <class T>
+class Seg {
+  vector<T> _v;
+  int _begin, _end, _size;
+  T _update(int n, int s, int e, int x, T uv) {
+    if (s == e) return _v[n] = uv;
+    int m = (s+e)>>1, l = n<<1, r = l|1;
+    if (x <= m) _update(l,s,m,x,uv);
+    else        _update(r,m+1,e,x,uv);
+    return _v[n] = _v[l] + _v[r];
   }
-  void _update(int node, int begin, int end, int index, int value) {
-    if (index < begin || index >= end) return;
-    if (begin + 1 == end) {
-      v[node] = value;
-      return;
-    }
-    int mid = (begin + end) >> 1;
-    _update(node<<1, begin, mid, index, value);
-    _update((node<<1)+1, mid, end, index, value);
-    v[node] = max(v[node<<1], v[(node<<1)+1]);
+  T _query(int n, int s, int e, int f, int t) {
+    if (t < s || e < f) return T::zero();
+    if (f <= s && e <= t) return _v[n];
+    int m = (s+e)>>1, l = n<<1, r = l|1;
+    return _query(l,s,m,f,t) + _query(r,m+1,e,f,t);
   }
-  int _get(int node, int begin, int end, int from, int to) {
-    if (end <= from || begin >= to) return -INF;
-    if (from <= begin && end <= to) return v[node];
-    int mid = (begin + end) >> 1;
-    return max(
-      _get(node<<1, begin, mid, from, to),
-      _get((node<<1)+1, mid, end, from, to)
-    );
+public:
+  Seg(int begin, int end) {
+    _begin = begin;
+    _end = end;
+    _size = 1 << ((int)ceil(log2(end - begin + 1)) + 1);
+    _v = vector<T>(_size);
   }
-  int size = S_SIZE;
-  void update(int index, int value) {
-    // printf("update %d = %d\n", index, value);
-    _update(1, 0, size, index, value);
+  T update(int x, T uv) {
+    return _update(1, _begin, _end, x, uv);
   }
-  int get(int from, int to) {
-    // printf("get %d, %d\n", from, to);
-    return _get(1, 0, size, from, to); 
+  T query(int f, int t) {
+    return _query(1, _begin, _end, f, t);
   }
 };
+
+struct MaxSegItem {
+  int v;
+  static MaxSegItem zero() {
+    const MaxSegItem ret = {-0x7fffffff};
+    return ret; 
+  }
+  MaxSegItem operator+(const MaxSegItem &b) const {
+    return {max(v, b.v)};
+  }
+};
+typedef Seg<MaxSegItem> MaxSeg;
+
+struct MinSegItem {
+  int v;
+  static MinSegItem zero() {
+    const MinSegItem ret = {0x7fffffff};
+    return ret; 
+  }
+  MinSegItem operator+(const MinSegItem &b) const {
+    return {min(v, b.v)};
+  }
+};
+typedef Seg<MinSegItem> MinSeg;
