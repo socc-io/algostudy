@@ -35,56 +35,40 @@ public:
   }
 };
 
-struct MaxSegItem {
-  int v;
-  static MaxSegItem zero() {
-    const MaxSegItem ret = {-0x7fffffff};
+struct SegItem {
+  int mv;
+  int Mv;
+  static SegItem zero() {
+    const SegItem ret = {0x7fffffff, -0x7fffffff};
     return ret; 
   }
-  MaxSegItem operator+(const MaxSegItem &b) const {
-    return {max(v, b.v)};
+  SegItem operator+(const SegItem &b) const {
+    return {min(mv, b.mv), max(Mv, b.Mv)};
   }
 };
-typedef Seg<MaxSegItem> MaxSeg;
-
-struct MinSegItem {
-  int v;
-  static MinSegItem zero() {
-    const MinSegItem ret = {0x7fffffff};
-    return ret; 
-  }
-  MinSegItem operator+(const MinSegItem &b) const {
-    return {min(v, b.v)};
-  }
-};
-typedef Seg<MinSegItem> MinSeg;
+typedef Seg<SegItem> MSeg;
 
 void solve() {
   int n, k; cin >> n >> k;
   vector<int> arr(n);
   iota(arr.begin(), arr.end(), 0);
-  MinSeg s_min(0, n-1);
-  MaxSeg s_max(0, n-1);
+  MSeg seg(0, n-1);
   for (int i = 0; i < n; i++) {
-    s_min.update(i, {i});
-    s_max.update(i, {i});
+    seg.update(i, {i, i});
   }
   while (k--) {
     int cd; cin >> cd;
     if (cd == 0) {
       int a, b; cin >> a >> b;
       int va = arr[a], vb = arr[b];
-      s_min.update(a, {vb});
-      s_min.update(b, {va});
-      s_max.update(a, {vb});
-      s_max.update(b, {va});
+      seg.update(a, {vb, vb});
+      seg.update(b, {va, va});
       swap(arr[a], arr[b]);
     } else if (cd == 1) {
       int a, b; cin >> a >> b;
       if (a > b) swap(a, b);
-      int mv = s_min.query(a, b).v;
-      int Mv = s_max.query(a, b).v;
-      bool res = mv == a && Mv == b;
+      auto r = seg.query(a, b);
+      bool res = r.mv == a && r.Mv == b;
       cout << (res ? "YES\n" : "NO\n");
     }
   }
