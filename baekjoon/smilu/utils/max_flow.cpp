@@ -8,13 +8,14 @@ using namespace std;
 
 typedef long long ll;
 
-const int MAXN = 222;
+const int MAX_N = 401;
+
 struct maxflow{
 	struct edg{int pos, cap, rev, idx;};
-	vector<edg> gph[MAXN];
+	vector<edg> gph[MAX_N];
  
 	void clear(){
-		for(int i=0; i<MAXN; i++){
+		for(int i=0; i<MAX_N; i++){
 			gph[i].clear();
 		}
 	}
@@ -29,7 +30,7 @@ struct maxflow{
 		gph[e].push_back({s, 0, (int)gph[s].size()-1, -1});
 	}
  
-	int dis[MAXN], pnt[MAXN];
+	int dis[MAX_N], pnt[MAX_N];
  
 	bool bfs(int src, int sink){
 		memset(dis, 0, sizeof(dis));
