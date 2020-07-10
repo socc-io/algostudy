@@ -11,7 +11,7 @@ void init_sz(
   for (int &v: adj[u]) if (v != p) {
     init_sz(adj, sz, v, u);
     sz[u] += sz[v];
-    if (sz[u] > sz[adj[u][0]]) swap(v, adj[u][0]);
+    if (sz[v] > sz[adj[u][0]]) swap(v, adj[u][0]);
   }
 }
 
