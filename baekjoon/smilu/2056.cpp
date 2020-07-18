@@ -1,5 +1,4 @@
-#include <cstdio>
-#include <cctype>
+#include <bits/stdc++.h>
 class FastIO {
     int fd, bufsz;
     char *buf, *cur, *end;
@@ -58,10 +57,10 @@ int main(void)
     int y = 0;
     for (int j = 0; j < c; j++) {
       int tmp = fio.readint() - 1;
-      if (et[tmp] > y) y = et[tmp];
+      y = max(y, et[tmp]);
     }
     et[i] = y + t;
-    if (et[i] > ans) ans = et[i];
+    ans = max(ans, et[i]);
   }
   printf("%d", ans);
 }
