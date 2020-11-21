@@ -1,56 +1,86 @@
-#include <cstdio>
+#include <bits/stdc++.h>
+using namespace std;
 
-#define INF 123456789
+typedef pair<int, int> pi;
+typedef priority_queue<pi, vector<pi>, greater<pi>> pq;
 
-struct state {
-  // int pl; // prev level
-  // int px; // prev x
-  // int py; // prev y
-  int mc; // min cost
-};
-
-const int dd[4][2] = {
-  {1,0},{-1,0},
-  {0,1},{0,-1},
-};
+const int dd[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+const int inf = 0x3f3f3f3f;
+const int state_size = (1 << 21);
 
 int n, m;
-char tile[1000][1001];
-state states[2][1000][1000];
+char tile[1010][1010];
 
-void search(int cl, int cx, int cy, int cc) {
-  state* s = &states[cl][cx][cy];
-  if (s->mc <= cc) return;
-  s->mc = cc;
-  // printf("[%d,%d,%d]=%d\n", cl, cx, cy, cc);
-  int nc = cc + 1;
-  for (int di = 0; di < 4; di++) {
-    int nx = cx + dd[di][0];
-    int ny = cy + dd[di][1];
-    if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
-    int nl = cl + tile[nx][ny];
-    if (nl >= 2) continue;
-    search(nl, nx, ny, nc);
-  }
+bool check_range(int x, int y) {
+  return 0 <= x && x < n && 0 <= y && y < m; 
 }
 
-int main(void)
-{
-  scanf("%d%d", &n, &m);
-  for (int i = 0; i < n; i++) {
-    scanf("%s", tile[i]);
-    for (int j = 0; j < m; j++) {
-      tile[i][j] -= '0';
+struct State {
+  int x, y, p;
+  State(int x, int y, int p): x(x),y(y),p(p) {}
+  State(int id) {
+    x = (id >> 11);
+    y = (id >> 1) & 0x3ff;
+    p = id & 1;
+  }
+  int id() {
+    return (x << 11) | (y << 1) | p;
+  }
+  vector<State> next() {
+    vector<State> res;
+    for (int di = 0; di < 4; di++) {
+      int nx = x + dd[di][0], ny = y + dd[di][1];
+      if (!check_range(nx, ny)) continue;
+      if (tile[nx][ny] == '1') {
+        if (p > 0) {
+          res.push_back(State(nx, ny, 0));
+        }
+      } else {
+        res.push_back(State(nx, ny, p));
+      }
+    }
+    return res;
+  }
+};
+
+// return minimum distance from (0, 0, 1) to every states
+int dijkstra() {
+  vector<int> dist(state_size, inf);
+  vector<bool> visit(state_size, false);
+  pq q;
+
+  State start(0, 0, 1);
+  int start_id = start.id();
+
+  dist[start_id] = 0;
+  q.push(make_pair(0, start_id));
+
+  while(!q.empty()) {
+    int iud = q.top().first + 1;
+    int uid = q.top().second; q.pop();
+    State u(uid);
+    if (visit[uid]) continue;
+    visit[uid] = true;
+    for (State v: u.next()) {
+      int vid = v.id();
+      if (visit[vid]) continue;
+      if (dist[vid] > iud) {
+        dist[vid] = iud;
+        q.push(make_pair(iud, vid));
+      }
     }
   }
-  for (int i = 0; i < 2; i++) for (int j = 0; j < 1000; j++)
-    for (int k = 0; k < 1000; k++) states[i][j][k].mc = INF;
-  search(0, 0, 0, 1);
 
-  int min = INF;
-  for (int i = 0; i < 2; i++) {
-    int c = states[i][n-1][m-1].mc;
-    if (c < min) min = c;
-  }
-  printf("%d", min == INF ? -1 : min);
+  int ans_1 = dist[State(n-1, m-1, 0).id()];
+  int ans_2 = dist[State(n-1, m-1, 1).id()];
+  int ans = min(ans_1, ans_2);
+
+  return ans == inf ? -1 : (ans + 1);
+}
+
+int main() {
+  ios::sync_with_stdio(0); cin.tie(0);
+  cin >> n >> m;
+  for (int i = 0; i < n; i++) cin >> tile[i];
+  cout << dijkstra() << '\n';
 }
