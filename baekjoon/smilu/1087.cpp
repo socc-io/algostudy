@@ -3,7 +3,7 @@ using namespace std;
 
 typedef long long ll;
 
-const double inf = 9999999999999;
+const double inf = DBL_MAX;
 
 struct Line {
 	mutable double k, m, p;
@@ -36,6 +36,14 @@ struct LineContainer : multiset<Line, less<>> {
 int n;
 LineContainer max_lc_x, min_lc_x, max_lc_y, min_lc_y;
 
+double f(double bp) {
+    double max_x = max_lc_x.query(bp);
+    double min_x = min_lc_x.query(bp);
+    double max_y = max_lc_y.query(bp);
+    double min_y = min_lc_y.query(bp);
+    return max(max_x + min_x, max_y + min_y);
+}
+
 int main() {
     ios::sync_with_stdio(0); cin.tie(0);
     cin >> n;
@@ -48,24 +56,19 @@ int main() {
         min_lc_y.add(-vy, -py);
     }
 
-    vector<double> bps;
-    for (auto & it: max_lc_x) bps.push_back(it.p);
-    for (auto & it: max_lc_y) bps.push_back(it.p);
-    for (auto & it: min_lc_x) bps.push_back(it.p);
-    for (auto & it: min_lc_y) bps.push_back(it.p);
-    sort(bps.begin(), bps.end());
-    bps.erase(unique(bps.begin(), bps.end()), bps.end());
-    bps.erase(bps.begin(), lower_bound(bps.begin(), bps.end(), 0));
-    
-    double ans = inf;
-    for (double bp: bps) {
-        double max_x = max_lc_x.query(bp);
-        double min_x = -min_lc_x.query(bp);
-        double max_y = max_lc_y.query(bp);
-        double min_y = -min_lc_y.query(bp);
-        double local = max(max_x - min_x, max_y - min_y);
-        ans = min(ans, local);
+    double low = 0;
+    double high = 2000;
+    for (int i = 0; i < 100 && low < high; i++) {
+        double a = (low * 2 + high) / 3;
+        double b = (low + 2 * high) / 3;
+        if (f(a) < f(b)) {
+            high = b;
+        } else {
+            low = a;
+        }
     }
+    
+    printf("%.11lf\n", f(low));
 
-    printf("%.9lf\n", ans);
+    return 0;
 }
