@@ -71,4 +71,23 @@ int main() {
     printf("%.11lf\n", f(low));
 
     return 0;
+
+    // vector<double> bps;
+    // bps.push_back(0.0);
+    // for (auto & it: max_lc_x) bps.push_back(it.p);
+    // for (auto & it: max_lc_y) bps.push_back(it.p);
+    // for (auto & it: min_lc_x) bps.push_back(it.p);
+    // for (auto & it: min_lc_y) bps.push_back(it.p);
+
+    // sort(bps.begin(), bps.end());
+    // bps.erase(unique(bps.begin(), bps.end()), bps.end());
+    // bps.erase(bps.begin(), lower_bound(bps.begin(), bps.end(), 0));
+    
+    // double ans = inf;
+    // for (double bp: bps) {
+    //     if (bp >= 2020) continue;
+    //     ans = min(ans, f(bp));
+    // }
+
+    // printf("%.11lf\n", ans);
 }
