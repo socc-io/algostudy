@@ -1,14 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int cost[5][5] = {
-  {1,2,2,2,2},
-  {2,1,3,4,3},
-  {2,3,1,3,4},
-  {2,4,3,1,3},
-  {2,3,4,3,1},
-};
 const int inf = 0x3f3f3f3f;
+
+const int cost[5][5] = {
+  {inf,2,2,2,2},
+  {inf,1,3,4,3},
+  {inf,3,1,3,4},
+  {inf,4,3,1,3},
+  {inf,3,4,3,1},
+};
 
 int n;
 int f[100010];
@@ -19,7 +20,6 @@ int get_dp(int i, int a, int b) {
     if (a == 0 && b == 0) return 0;
     return inf;
   }
-  // if (i >= 2 && (a == 0 || b == 0)) return inf;
   if (a == b) return inf;
   if (a != f[i] && b != f[i]) return inf;
   int &ret = dp[i][a][b];
