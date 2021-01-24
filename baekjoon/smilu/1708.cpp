@@ -25,7 +25,8 @@ struct point {
 };
 
 lld ccw(point a, point b, point c) {
-  return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+  lld v = (a.x*b.y+b.x*c.y+c.x*a.y)-(a.y*b.x+b.y*c.x+c.y*a.x);
+  return v;
 }
 
 vector<point> graham_scan(vector<point> &ps) { // convex hull
@@ -37,7 +38,7 @@ vector<point> graham_scan(vector<point> &ps) { // convex hull
     return (ps[0]-a).abs2() < (ps[1]-b).abs2();
   });
   for (auto p: ps) {
-    while (rs.size() >= 2 && ccw(rs[rs.size()-2], rs.back(), p) <= 0)
+    while (rs.size() >= 2 && (ccw(rs[rs.size()-2], rs.back(), p) <= 0 || ccw(rs.back(), p, rs[0]) <= 0))
       rs.pop_back();
     rs.push_back(p);
   }
