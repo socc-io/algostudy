@@ -33,3 +33,38 @@ class LinearMinCHT{
 			idx = 0; stk.clear();
 		}
 };
+
+typedef long long ll;
+typedef pair<ll, ll> p;
+
+#define INF 0x7fffffffffffffff
+
+struct CHT{ // max cht
+	ll a[101010], b[101010], c[101010];
+	int pv, top;
+
+	void clear(){
+		pv = top = 0;
+	}
+
+	ll f(ll idx, ll x){
+		return a[idx]*x + b[idx];
+	}
+
+	void insert(ll aa, ll bb, ll cc){
+		if(top >= 1 && aa == a[top-1]){
+			c[top-1] = cc; return;
+		}
+		while(top >= 2 && (b[top-1] - b[top-2]) * (a[top-2] - aa) >= (bb - b[top-2]) * (a[top-2] - a[top-1])) top--;
+		a[top] = aa;
+		b[top] = bb;
+		c[top] = cc;
+		top++;
+		if(pv >= top) pv = top - 1;
+	}
+
+	p query(ll x){
+		while(pv+1 < top && a[pv+1]*x + b[pv+1] > a[pv]*x + b[pv]) pv++;
+		return {f(pv, x), c[pv]};
+	}
+};
