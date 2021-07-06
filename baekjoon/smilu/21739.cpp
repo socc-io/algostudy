@@ -20,8 +20,7 @@ int main() {
 	int u = 1, d = 1;
 	for (int i = n+1; i <= (n<<1); i++)
 		u = (1ll * u * i) % mod;
-	for (int i = 1; i <= n; i++)
+	for (int i = 1; i <= n+1; i++)
 		d = (1ll * d * i) % mod;
-	d = (1ll * d * (n+1)) % mod;
 	printf("%lld", (1ll * u * inv(d)) % mod);
 }
