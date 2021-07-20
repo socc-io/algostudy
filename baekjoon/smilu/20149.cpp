@@ -55,8 +55,11 @@ int main() {
 	  cout << "1\n";
 	  auto res = get_intersection(a, b, c, d);
 	  if (res.first != 1234.0 || res.second != 1234.0) {
+		  cout << fixed;
+		  cout.precision(9);
 		  cout << res.first << ' ' << res.second << '\n';
 	  }
+  } else {  
+	cout << "0\n";
   }
-  cout << "0\n";
 }
