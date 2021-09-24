@@ -1,3 +1,6 @@
+#include <vector>
+using namespace std;
+
 void find_centroids(vector<int> &cont, int u, int p = -1) {
   sz[u] = 1;
   bool flag = false;
