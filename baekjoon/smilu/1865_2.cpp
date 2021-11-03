@@ -40,7 +40,7 @@ bool spfa(int start) {
       d[v] = vd;
       if (par[v] == u) {
         cnt[v]++;
-        if (cnt[v] >= 10) return true;
+        if (cnt[v] >= 50) return true;
       } else {
         cnt[v] = 0;
         par[v] = u;
@@ -76,14 +76,8 @@ void solve() {
   }
   bool ans = false;
   for (int i = 0; i < n; i++) {
-    if (!visited[i]) {
-      bool res = spfa(i);
-      // printf("start: %d, res: %d\n", i, res);
-      if (res) {
-        ans = true;
-        break;
-      }
-    }
+	if (visited[i]) continue;
+    if (ans = spfa(i)) break;
   }
   puts(ans ? "YES" : "NO");
 }
