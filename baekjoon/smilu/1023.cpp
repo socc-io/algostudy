@@ -1,53 +1,37 @@
-/*
- * author: smilu97
- * description:
- *  algorithm solving of https://www.acmicpc.net/problem/1023
- *  ref: http://wookje.dance/2018/11/14/boj-1023/
- */
+#include <bits/stdc++.h>
+using namespace std;
 
-#include <cstdio>
-#include <cstring>
+typedef long long ll;
 
-typedef long long lld;
+int n;
+ll dp[50][101][2];
 
-const lld INF = 0x3f3f3f3f3f3f3f3f;
-int N;
-lld K, dp[55][105][2];
-
-lld getdp(int depth, int point, int neg)
-{
-    if (depth == N) return neg || point != 50;
-    lld &ret = dp[depth][point][neg];
-    if (ret != INF) return ret;
-    return ret = getdp(depth + 1, point - 1, neg || point <= 50)
-        + getdp(depth + 1, point + 1, neg);
+ll get(int pos, int cnt, bool downed) {
+	if (pos >= n) return downed || (cnt != n);
+	ll &ret = dp[pos][cnt][downed];
+	if (~ret) return ret;
+	return ret =  get(pos + 1, cnt + 1, downed)
+	            + get(pos + 1, cnt - 1, downed || cnt <= n);
 }
 
-void solve(int depth, int point, int neg)
-{
-    if (depth == N) return;
-    if (dp[depth + 1][point + 1][neg] >= K) {
-        if (depth == N - 1 && K == 2) putchar(')');
-        else putchar('(');
-        solve(depth + 1, point + 1, neg);
-    } else {
-        putchar(')');
-        K -= dp[depth + 1][point + 1][neg];
-        solve(depth + 1, point - 1, neg || point <= 50);
-    }
+void print(int pos, int cnt, bool downed, ll index) {
+	if (pos >= n) return;
+	ll pivot = get(pos + 1, cnt + 1, downed);
+	if (index < pivot) {
+		putchar('(');
+		print(pos + 1, cnt + 1, downed, index);
+	} else {
+		putchar(')');
+		print(pos + 1, cnt - 1, downed || cnt <= n, index - pivot);
+	}
 }
 
-int main(void)
-{
-    scanf("%d%lld", &N, &K); K++;
-
-    memset(dp, 0x3f, sizeof(dp));
-    getdp(0, 50, 0);
-
-    if (dp[0][50][0] < K) {
-        return !puts("-1");
-    }
-    solve(0, 50, 0);
-
-    return 0;
+int main() {
+	ios::sync_with_stdio(0); cin.tie(0);
+	memset(dp, 0xFF, sizeof(dp));
+	ll k;
+	cin >> n >> k;
+	if (k >= get(0, n, false)) puts("-1");
+	else print(0, n, false, k);
+	return 0;
 }
