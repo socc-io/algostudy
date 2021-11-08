@@ -35,13 +35,16 @@ vector<point> graham_scan(vector<point> &ps) { // convex hull
   sort(ps.begin() + 1, ps.end(), [&](point a, point b) {
     lld dir = ccw(ps[0], a, b);
     if (dir) return dir > 0;
-    return (ps[0]-a).abs2() < (ps[1]-b).abs2();
+    return (ps[0]-a).abs2() < (ps[0]-b).abs2();
   });
+  // printf("points: "); for (auto p: ps) printf("(%lld, %lld) ", p.x, p.y); puts("");
   for (auto p: ps) {
-    while (rs.size() >= 2 && (ccw(rs[rs.size()-2], rs.back(), p) <= 0 || ccw(rs.back(), p, rs[0]) <= 0))
+    while (rs.size() >= 2 && (ccw(rs[rs.size()-2], rs.back(), p) <= 0))
       rs.pop_back();
     rs.push_back(p);
+	// printf("records: "); for (auto p: rs) printf("(%lld, %lld) ", p.x, p.y); puts("");
   }
+  
   return rs;
 }
 
