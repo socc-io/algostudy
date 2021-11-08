@@ -25,12 +25,12 @@ int main() {
     int g = abs(b - a);
     n -= 2;
     while (n--) {
-        int tmp; scanf("%d", &tmp);
-        g = gcd(g, abs(tmp - a));
+        scanf("%d", &b);
+        g = gcd(g, abs(b - a));
     }
-    for (int i = 2; i*i <= g; i++) if (!(g % i)) {
-        printf("%d ", i);
-        buf[bl++] = g / i;
+    for (a = 2; a*a <= g; a++) if (!(g % a)) {
+        printf("%d ", a);
+        buf[bl++] = g / a;
     }
     bl -= (bl > 0 && sqr(buf[bl - 1]) == g);
     while (bl--) printf("%d ", buf[bl]);
