@@ -1,30 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int pow10[10];
+typedef long long ll;
 
-int ext_digit(int x, int p) {
-    return (x / pow10[p]) % 10;
-}
+ll pc[10];
 
-int case1(int l, int u, int p, int x) {
-
-}
-
-int sub(int l, int u, int p, int x) {
-    const int lp = ext_digit(l, p), up = ext_digit(u, p);
-    if (x < lp) {
-        return (((u / pow10[p+1]) - (l / pow10[p+1])) * pow10[p]);
-    } else if (x == lp) {
-        return ((u % pow10[p]) - (l % pow10[p]) + 1) +
-          (((u / pow10[p+1]) - (l / pow10[p+1])) * pow10[p]);
-    } else if (x < up) {
-        return (((u / pow10[p+1]) - (l / pow10[p+1]) + 1) * pow10[p]);
+ll sub(ll u, int p, int x) {
+    const int up = (u / pc[p]) % 10;
+    if (x < up) {
+        return (u / pc[p+1] + 1) * pc[p];
     } else if (x == up) {
-        return ((u % pow10[p]) - (l % pow10[p]) + 1) +
-          (((u / pow10[p+1]) - (l / pow10[p+1])) * pow10[p]);
+        return (u / pc[p+1]) * pc[p] + u % pc[p] + 1;
     } else {
-        return (((u / pow10[p+1]) - (l / pow10[p+1])) * pow10[p]);
+        return (u / pc[p+1]) * pc[p];
     }
 }
 
@@ -32,14 +20,15 @@ int main() {
     int l, u;
     scanf("%d %d", &l, &u);
     
-    pow10[0] = 1;
-    for (int i = 1; i < 10; i++) pow10[i] = pow10[i-1] * 10;
+    pc[0] = 1;
+    for (int i = 1; i < 10; i++) pc[i] = pc[i-1] * 10;
 
+    ll ans = 0;
     for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            ans += sub(l, u, i, j) * j;
+        for (int j = 1; j < 10; j++) {
+            ans += (sub(u, i, j) - sub(l-1, i, j)) * j;
         }
     }
 
-    printf("%d", ans);
+    printf("%lld", ans);
 }
