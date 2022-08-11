@@ -1,18 +1,26 @@
-#include <cstdio>
+#include <iostream>
+#include <string>
+using namespace std;
 
-int T, N;
-char buf[200];
+void task() {
+	int r;
+	string s;
+	cin >> r >> s;
 
-int main(void)
-{
-	scanf("%d", &T);
-	for(int t = 0; t < T; ++t) {
-		scanf("%d%s", &N, buf);
-		for(char *ch = buf; (*ch) != '\0'; ++ch) {
-			for(int i = 0; i < N; ++i) {
-				putchar(*ch);
-			}
+	for (int i = 0; i < s.length(); i++) {
+		for (int j = 0; j < r; j++) {
+			cout << s[i];
 		}
-		putchar('\n');
+	}
+
+	cout << '\n';
+}
+
+int main() {
+	int t;
+	cin >> t;
+
+	while (t--) {
+		task();
 	}
 }

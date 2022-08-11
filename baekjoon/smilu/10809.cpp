@@ -7,16 +7,19 @@ int main(void)
 	int pos[26];
 	char s[101];
 
-	scanf("%s", s);
+	pos[3] = 0;
+
+	cin >> s;
 
 	memset(pos, -1, sizeof(int) * 26);
 	for(int i=0; s[i] != '\0'; ++i) {
-		if(pos[s[i] - 'a'] == -1) {
-			pos[s[i] - 'a'] = i;
+		int key = s[i] - 'a';
+		if(pos[key] == -1) {
+			pos[key] = i;
 		}
 	}
 
 	for(int i=0; i<26; ++i) {
-		printf("%d ", pos[i]);
+		cout << pos[i] << ' ';
 	}
 }

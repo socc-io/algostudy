@@ -1,19 +1,14 @@
-#include <cstdio>
-int N,x,y,s;
+#include <bits/stdc++.h>
+using namespace std;
+
 int main(void)
 {
-	while(~scanf("%d%d%d",&N,&x,&y))
-	{
-		for(N=1<<N-1, s=0; N; N >>= 1) {
-			if (x >= N) {
-				s += (N*N)<<1;
-				x -= N;
-			}
-			if (y >= N) {
-				s += N*N;
-				y -= N;
-			}
-		}
-		printf("%d\n",s);
+	int N, x, y, s = 0;
+	cin >> N >> x >> y;
+	for(N = (1<<N-1); N; N >>= 1) {
+		s += (x >= N) * (2*N*N) + (y >= N) * (N*N);
+		x %= N;
+		y %= N;
 	}
+	cout << s;
 }
