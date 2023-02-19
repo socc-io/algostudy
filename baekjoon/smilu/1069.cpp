@@ -1,24 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-double x, y, D, T, d;
-
-double try_k(double k) {
-    if (k < 0) return try_k(0);
-    return k*T + abs(d - k*D);
-}
+double x, y, d, t;
 
 int main() {
-    ios::sync_with_stdio(0); cin.tie(0); 
-    cin >> x >> y >> D >> T;
-    d = sqrt(x*x + y*y);
-    double k = floor(d/D);
-    double ans = d;
-    if (D > T) {
-        ans = min(ans, try_k(k-1));
-        ans = min(ans, try_k(k));
-        ans = min(ans, try_k(k+1));
-        if (k >= 1) ans = min(ans, (k+1)*T);
-    }
-    printf("%.13lf\n", ans);
+    scanf("%lf %lf %lf %lf", &x, &y, &d, &t);
+    double l2 = hypot(x, y);
+    double n_less = floor(l2 / d);
+    double n_more = ceil(l2 / d);
+
+    double ans = l2;
+    ans = min(ans, n_less*t + abs(l2 - d*n_less));
+    ans = min(ans, n_more*t + abs(l2 - d*n_more));
+    ans = min(ans, max(2.0, n_more) * t);
+    
+    printf("%.9lf", ans);
 }
